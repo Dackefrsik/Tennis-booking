@@ -41,6 +41,7 @@ window.addEventListener("load", () => {
     let imgRef = document.querySelectorAll("img[alt^='Court']");
 
     courtFokus(imgRef);
+
 });
 //#endregion
 
@@ -87,6 +88,7 @@ function createModalBoydy(img, i){
 
     //Hämtar ut headern och skriver ut vilken bana som man kollar tider för
     let modalHeaderRef = document.querySelector(".modal-title");
+    modalHeaderRef.innerHTML = "";
     let courtNumber = img.getAttribute("data-court-number");
     modalHeaderRef.innerHTML = "Court " + courtNumber;
 
@@ -123,8 +125,8 @@ function createModalBoydy(img, i){
         for(let i = 0; i < court2.time.length; i++){
             if(court2.time[i] != undefined){
                 let optionRef = document.createElement("option");
-                optionRef.setAttribute("value", court1.time[i]);
-                optionRef.innerHTML = court1.time[i];
+                optionRef.setAttribute("value", court2.time[i]);
+                optionRef.innerHTML = court2.time[i];
                 selectRef.appendChild(optionRef);
             }
 
@@ -135,8 +137,8 @@ function createModalBoydy(img, i){
         for(let i = 0; i < court3.time.length; i++){
             if(court3.time[i] != undefined){
                 let optionRef = document.createElement("option");
-                optionRef.setAttribute("value", court1.time[i]);
-                optionRef.innerHTML = court1.time[i];
+                optionRef.setAttribute("value", court3.time[i]);
+                optionRef.innerHTML = court3.time[i];
                 selectRef.appendChild(optionRef);
             }
         }
@@ -146,8 +148,8 @@ function createModalBoydy(img, i){
         for(let i = 0; i < court4.time.length; i++){
             if(court4.time[i] != undefined){
                 let optionRef = document.createElement("option");
-                optionRef.setAttribute("value", court1.time[i]);
-                optionRef.innerHTML = court1.time[i];
+                optionRef.setAttribute("value", court4.time[i]);
+                optionRef.innerHTML = court4.time[i];
                 selectRef.appendChild(optionRef);
             }
         }
@@ -155,12 +157,10 @@ function createModalBoydy(img, i){
     //Bana 5
     else if(courtNumber == 5){
         for(let i = 0; i < court5.time.length; i++){
-            if(court5.time[i] != undefined){
                 let optionRef = document.createElement("option");
-                optionRef.setAttribute("value", court1.time[i]);
-                optionRef.innerHTML = court1.time[i];
+                optionRef.setAttribute("value", court5.time[i]);
+                optionRef.innerHTML = court5.time[i];
                 selectRef.appendChild(optionRef);
-            }
         }
     }
 
@@ -174,11 +174,22 @@ function createModalBoydy(img, i){
    
     modalBodyRef.appendChild(formRef);
 
-    let confermBookingRef = document.querySelector("#confirmBooking");
+    let modalFooterRef = document.querySelector(".modal-footer");
+  modalFooterRef.removeChild(modalFooterRef.lastChild);
 
-    //Knappen som genomför en bokning 
-    confermBookingRef.addEventListener("click", () => {
-        
+
+
+
+    let confirmButtonRef = document.createElement("button");
+    confirmButtonRef.classList.add("btn", "btn-success");
+    confirmButtonRef.setAttribute("data-bs-dismiss", "modal");
+    confirmButtonRef.setAttribute("type", "button");
+    confirmButtonRef.innerHTML = "Book"
+
+
+    modalFooterRef.appendChild(confirmButtonRef)
+
+    confirmButtonRef.addEventListener("click", () => {
         //Kollar om alla input fälten är ifyllda
         if(selectRef.value != "Select time" && inputRef.value != ""){
             confirmBooking(modalHeaderRef.innerHTML, selectRef.value, inputRef.value);
@@ -190,6 +201,13 @@ function createModalBoydy(img, i){
 //#endregion
 
 //#region 
+
+
+
+//#endregion
+
+
+//#region funktion för att genomföra en bokning
 
 function confirmBooking(Court, time, name){
 
@@ -207,7 +225,7 @@ function confirmBooking(Court, time, name){
     }
     //Bana 3
     else if(Court == "Court 3"){
-        court3.time.splice(court3.time.indexOf(time), 1 );
+        court3.time.splice(court3.time.indexOf(time), 1);
     }
     //Bana 4
     else if(Court == "Court 4"){
@@ -215,11 +233,49 @@ function confirmBooking(Court, time, name){
     }
     //Bana 5
     else if(Court == "Court 5"){
-        court5.time.splice(court5.time.indexOf(time), 1);
+        court5.time.splice(court5.time.indexOf(time.toString()), 1);
     }
 
     //Sparar bokningen i en array
     bookings.push(newBooking);
+
+
+    console.log(bookings);
+
+    loadBookings();
+}
+
+//#endregion
+
+//#region 
+
+function loadBookings(){
+
+    let bookingsDivRef = document.querySelector("#bookings");
+    bookingsDivRef.innerHTML = "";
+
+    for(let i = 0; i < bookings.length; i++){
+        
+        let bookingBodyRef = document.createElement("div");
+        bookingBodyRef.classList.add("mb-2","ps-3", "pt-2", "border", "rounded");
+
+        let h3Ref = document.createElement("h3");
+        h3Ref.innerHTML = bookings[i].Number;
+
+        let timeRef = document.createElement("h5");
+        timeRef.innerHTML = "Time: " + bookings[i].Time;
+
+        let nameRef = document.createElement("p");
+        nameRef.innerHTML = "Name: " + bookings[i].Name;
+
+        bookingBodyRef.appendChild(h3Ref);
+        bookingBodyRef.appendChild(timeRef);
+        bookingBodyRef.appendChild(nameRef);
+        bookingsDivRef.appendChild(bookingBodyRef);
+        
+    }
+
+
 }
 
 //#endregion
