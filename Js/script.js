@@ -200,13 +200,6 @@ function createModalBoydy(img, i){
 
 //#endregion
 
-//#region 
-
-
-
-//#endregion
-
-
 //#region funktion för att genomföra en bokning
 
 function confirmBooking(Court, time, name){
@@ -242,14 +235,14 @@ function confirmBooking(Court, time, name){
 
     console.log(bookings);
 
-    loadBookings();
+    loadBookings(newBooking);
 }
 
 //#endregion
 
 //#region 
 
-function loadBookings(){
+function loadBookings(newBooking){
 
     let bookingsDivRef = document.querySelector("#bookings");
     bookingsDivRef.innerHTML = "";
@@ -257,7 +250,13 @@ function loadBookings(){
     for(let i = 0; i < bookings.length; i++){
         
         let bookingBodyRef = document.createElement("div");
-        bookingBodyRef.classList.add("mb-2","ps-3", "pt-2", "border", "rounded");
+        bookingBodyRef.classList.add("mb-2","ps-3", "pt-2", "pe-3", "border", "rounded", "d-flex", "justify-content-between");
+
+        let bookingsBodyLeftRef = document.createElement("div");
+        let bookingsBodyRightRef = document.createElement("div");
+
+        bookingsBodyRightRef.classList.add("align-self-end", "mb-3");
+        
 
         let h3Ref = document.createElement("h3");
         h3Ref.innerHTML = bookings[i].Number;
@@ -268,10 +267,29 @@ function loadBookings(){
         let nameRef = document.createElement("p");
         nameRef.innerHTML = "Name: " + bookings[i].Name;
 
-        bookingBodyRef.appendChild(h3Ref);
-        bookingBodyRef.appendChild(timeRef);
-        bookingBodyRef.appendChild(nameRef);
+        bookingsBodyLeftRef.appendChild(h3Ref);
+        bookingsBodyLeftRef.appendChild(timeRef);
+        bookingsBodyLeftRef.appendChild(nameRef);
+
+        let btnRemoveRef = document.createElement("button");
+        btnRemoveRef.classList.add("btn", "bg-danger", "text-white");
+        btnRemoveRef.setAttribute("type", "button");
+        btnRemoveRef.setAttribute("data-bocking-index", bookings.indexOf(newBooking));
+        btnRemoveRef.innerHTML = "Boka av";
+
+        btnRemoveRef.addEventListener("click", () => {
+            let removeValue = btnRemoveRef.getAttribute("data-booking-index");
+            bookings.splice(parseInt(removeValue), 1);
+            loadBookings();
+        })
+
+        bookingsBodyRightRef.appendChild(btnRemoveRef);
+
+        bookingBodyRef.appendChild(bookingsBodyLeftRef);
+        bookingBodyRef.appendChild(bookingsBodyRightRef);   
+        
         bookingsDivRef.appendChild(bookingBodyRef);
+
         
     }
 
