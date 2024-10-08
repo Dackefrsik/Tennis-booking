@@ -110,6 +110,7 @@ function createModalBoydy(img, i){
     //Skriver ut tiderna beroende på vilken banan som användaren har klickat på
     //Bana 1
     if(courtNumber == 1){
+        court1.time.sort();
         for(let i = 0; i < court1.time.length; i++){
             if(court1.time[i] != undefined){
                 let optionRef = document.createElement("option");
@@ -122,6 +123,7 @@ function createModalBoydy(img, i){
     }
     //Bana 2
     else if(courtNumber == 2){
+        court2.time.sort();
         for(let i = 0; i < court2.time.length; i++){
             if(court2.time[i] != undefined){
                 let optionRef = document.createElement("option");
@@ -134,6 +136,7 @@ function createModalBoydy(img, i){
     }
     //Bana 3
     else if(courtNumber == 3){
+        court3.time.sort();
         for(let i = 0; i < court3.time.length; i++){
             if(court3.time[i] != undefined){
                 let optionRef = document.createElement("option");
@@ -145,6 +148,7 @@ function createModalBoydy(img, i){
     }
     //Bana 4
     else if(courtNumber == 4){
+        court4.time.sort();
         for(let i = 0; i < court4.time.length; i++){
             if(court4.time[i] != undefined){
                 let optionRef = document.createElement("option");
@@ -156,6 +160,7 @@ function createModalBoydy(img, i){
     }
     //Bana 5
     else if(courtNumber == 5){
+        court5.time.sort();
         for(let i = 0; i < court5.time.length; i++){
                 let optionRef = document.createElement("option");
                 optionRef.setAttribute("value", court5.time[i]);
@@ -278,6 +283,26 @@ function loadBookings(newBooking){
         btnRemoveRef.innerHTML = "Boka av";
 
         btnRemoveRef.addEventListener("click", () => {
+            let timeRef = newBooking.Time;
+            let courtRef = newBooking.Number;
+
+            if(courtRef == "Court 1"){
+                console.log("Court 1");
+                court1.time.push(timeRef);
+            }
+            else if(courtRef == "Court 2"){
+                court2.time.add(timeRef);
+            }
+            else if(courtRef == "Court 3"){
+                court3.time.push(timeRef);
+            }
+            else if(courtRef == "Court 4"){
+                court4.time.push(timeRef);
+            }
+            else if(courtRef == "Court 5"){
+                court5.time.push(timeRef);
+            }
+
             let removeValue = btnRemoveRef.getAttribute("data-booking-index");
             bookings.splice(parseInt(removeValue), 1);
             loadBookings();
