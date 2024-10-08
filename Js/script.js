@@ -35,30 +35,67 @@ let court5 = {
 
 //#endregion
 
-//#region window load
-window.addEventListener("load", () => {
-    
-    let imgRef = document.querySelectorAll("img[alt^='Court']");
-
-    courtFokus(imgRef);
-
-});
-//#endregion
-
 //#region Obejkt för varje bokning
 
-function booking(number, time, name){
+class booking{
 
-    return{
-        Number : number,
-        Time : time,
-        Name : name
+    constructor(number, time, name){
+        this.Number = number,
+        this.Time = time,
+        this.Name = name
     }
     
 }
 
 let bookings = [];
 
+//#endregion
+
+//#region 
+
+function upTimer(hour, min, second){
+
+    second ++;
+    if(second == 60){
+        second = 0;
+        min ++;
+    }
+    else if(min == 60){
+        min = 0;
+        hour ++;
+    }
+    else if(hour == 24){
+        hour = 0;
+    }
+
+    return oGlobalObject.hour = hour, oGlobalObject.min = min, oGlobalObject.second = second; 
+
+
+}
+
+//#endregion
+
+//#region window load
+window.addEventListener("load", () => {
+
+    window.oGlobalObject = {
+        timer : null,
+        hour : new Date().getHours(),
+        min : new Date().getHours(),
+        second : new Date().getSeconds()
+    }
+    
+    oGlobalObject.timer = setInterval(() => {
+        
+        upTimer(oGlobalObject.hour, oGlobalObject.min, oGlobalObject.second)
+        
+    } , 1000)
+    
+    let imgRef = document.querySelectorAll("img[alt^='Court']");
+
+    courtFokus(imgRef);
+
+});
 //#endregion
 
 //#region funktion för att fokusera på en bana
@@ -108,37 +145,68 @@ function createModalBoydy(img, i){
     selectRef.appendChild(optionRef);
 
     //Skriver ut tiderna beroende på vilken banan som användaren har klickat på
+
+    //Parsar tiderna från objektet
+
+    let objHour = parseInt(oGlobalObject.hour);
+    let objMin = parseInt(oGlobalObject.min);
+
     //Bana 1
     if(courtNumber == 1){
         court1.time.sort();
+
+        //Går igenom alla tiderna
         for(let i = 0; i < court1.time.length; i++){
-            if(court1.time[i] != undefined){
+
+            //Splittar tiderna som finns i vektorn på :
+            let splitTimer = court1.time[i].split(":");
+            let timeHoure = parseInt(splitTimer[0]);
+            let timeMin = parseInt(splitTimer[1]);
+
+            //Kollar om tiden ska gå att boka
+            if(court1.time[i] != undefined && (timeHoure > objHour || (timeHoure === objHour && timeMin >= objMin))){
                 let optionRef = document.createElement("option");
                 optionRef.setAttribute("value", court1.time[i]);
                 optionRef.innerHTML = court1.time[i];
                 selectRef.appendChild(optionRef);
-            }
-            
+            } 
         }
     }
     //Bana 2
     else if(courtNumber == 2){
         court2.time.sort();
+
+        //Går igenom alla tiderna
         for(let i = 0; i < court2.time.length; i++){
-            if(court2.time[i] != undefined){
+
+            //Splittar tiderna som finns i vektorn på :
+            let splitTimer = court1.time[i].split(":");
+            let timeHoure = parseInt(splitTimer[0]);
+            let timeMin = parseInt(splitTimer[1]);
+
+            //Kollar om tiden ska gå att boka
+            if(court2.time[i] != undefined && (timeHoure > objHour || (timeHoure === objHour && timeMin >= objMin))){
                 let optionRef = document.createElement("option");
                 optionRef.setAttribute("value", court2.time[i]);
                 optionRef.innerHTML = court2.time[i];
                 selectRef.appendChild(optionRef);
             }
-
         }
     }
     //Bana 3
     else if(courtNumber == 3){
         court3.time.sort();
+
+        //Går igenom alla tiderna
         for(let i = 0; i < court3.time.length; i++){
-            if(court3.time[i] != undefined){
+
+            //Splittar tiderna som finns i vektorn på :
+            let splitTimer = court1.time[i].split(":");
+            let timeHoure = parseInt(splitTimer[0]);
+            let timeMin = parseInt(splitTimer[1]);
+
+            //Kollar om tiden ska gå att boka
+            if(court3.time[i] != undefined && (timeHoure > objHour || (timeHoure === objHour && timeMin >= objMin))){
                 let optionRef = document.createElement("option");
                 optionRef.setAttribute("value", court3.time[i]);
                 optionRef.innerHTML = court3.time[i];
@@ -149,51 +217,72 @@ function createModalBoydy(img, i){
     //Bana 4
     else if(courtNumber == 4){
         court4.time.sort();
+
+        //Går igenom alla tiderna
         for(let i = 0; i < court4.time.length; i++){
-            if(court4.time[i] != undefined){
-                let optionRef = document.createElement("option");
-                optionRef.setAttribute("value", court4.time[i]);
-                optionRef.innerHTML = court4.time[i];
-                selectRef.appendChild(optionRef);
+
+            //Splittar tiderna som finns i vektorn på :                
+            let splitTimer = court1.time[i].split(":");
+            let timeHoure = parseInt(splitTimer[0]);
+            let timeMin = parseInt(splitTimer[1]);
+
+            //Kollar om tiden ska gå att boka
+            if(court4.time[i] != undefined && (timeHoure > objHour || timeHoure === objHour && timeMin >= objMin)){
+            let optionRef = document.createElement("option");
+            optionRef.setAttribute("value", court4.time[i]);
+            optionRef.innerHTML = court4.time[i];
+            selectRef.appendChild(optionRef);
             }
         }
     }
     //Bana 5
     else if(courtNumber == 5){
         court5.time.sort();
+
+        //Går igenom alla tiderna
         for(let i = 0; i < court5.time.length; i++){
+
+            //Splittar tiderna som finns i vektorn på :
+            let splitTimer = court1.time[i].split(":");
+            let timeHoure = parseInt(splitTimer[0]);
+            let timeMin = parseInt(splitTimer[1]);
+
+            //Kollar om tiden ska gå att boka
+            if(court5.time[i] != undefined && (timeHoure > objHour || (timeHoure === objHour && timeMin >= objMin))){
                 let optionRef = document.createElement("option");
                 optionRef.setAttribute("value", court5.time[i]);
                 optionRef.innerHTML = court5.time[i];
                 selectRef.appendChild(optionRef);
+            }
         }
     }
 
     formRef.appendChild(selectRef);
 
+    //Skapar ett input fällt för namn
     let inputRef = document.createElement("input");
     inputRef.setAttribute("type", "text");
     inputRef.setAttribute("placeholder", "Name");
     inputRef.classList.add("form-control", "mt-3");
     formRef.appendChild(inputRef);
-   
+
+    //Lägger till fomuläret i modalens kropp 
     modalBodyRef.appendChild(formRef);
 
+    //Hämtar modalens footer och tar bort det sissta elementet
+    //Tidigare skapad knapp
     let modalFooterRef = document.querySelector(".modal-footer");
-  modalFooterRef.removeChild(modalFooterRef.lastChild);
+    modalFooterRef.removeChild(modalFooterRef.lastChild);
 
-
-
-
+    //Skapar en knapp som genomför bokningar
     let confirmButtonRef = document.createElement("button");
     confirmButtonRef.classList.add("btn", "btn-success");
     confirmButtonRef.setAttribute("data-bs-dismiss", "modal");
     confirmButtonRef.setAttribute("type", "button");
-    confirmButtonRef.innerHTML = "Book"
+    confirmButtonRef.innerHTML = "Book";
+    modalFooterRef.appendChild(confirmButtonRef);
 
-
-    modalFooterRef.appendChild(confirmButtonRef)
-
+    //Lägger till en lyssnare på knappen
     confirmButtonRef.addEventListener("click", () => {
         //Kollar om alla input fälten är ifyllda
         if(selectRef.value != "Select time" && inputRef.value != ""){
@@ -245,80 +334,95 @@ function confirmBooking(Court, time, name){
 
 //#endregion
 
-//#region 
+//#region laddar alla bokningar
 
 function loadBookings(newBooking){
 
+    //Hämtar ut DIV:n som visar alla bokninger
+    //Tömmer den för att inte visa dubletter
     let bookingsDivRef = document.querySelector("#bookings");
     bookingsDivRef.innerHTML = "";
 
+    //Loopar igenom alla bokningar
     for(let i = 0; i < bookings.length; i++){
         
+        //skapar upp en div som visar bokningen
         let bookingBodyRef = document.createElement("div");
         bookingBodyRef.classList.add("mb-2","ps-3", "pt-2", "pe-3", "border", "rounded", "d-flex", "justify-content-between");
 
+        //Skapar upp en div för högra och vänstra halvan
         let bookingsBodyLeftRef = document.createElement("div");
+        bookingsBodyRightRef.classList.add("align-self-end", "mb-3");
         let bookingsBodyRightRef = document.createElement("div");
 
-        bookingsBodyRightRef.classList.add("align-self-end", "mb-3");
-        
-
+        //Skapar en h3:a för att visa vilken bana bokningen är gjord på
         let h3Ref = document.createElement("h3");
         h3Ref.innerHTML = bookings[i].Number;
+        bookingsBodyLeftRef.appendChild(h3Ref);
 
+        //Skapar en h5:a för att visa vilken tid bokningen avse
         let timeRef = document.createElement("h5");
         timeRef.innerHTML = "Time: " + bookings[i].Time;
+        bookingsBodyLeftRef.appendChild(timeRef);
 
+        //Skriver ut ett namn så att vi vet vem som gjort bokningen
         let nameRef = document.createElement("p");
         nameRef.innerHTML = "Name: " + bookings[i].Name;
-
-        bookingsBodyLeftRef.appendChild(h3Ref);
-        bookingsBodyLeftRef.appendChild(timeRef);
         bookingsBodyLeftRef.appendChild(nameRef);
 
+        //Skapar en knapp som tar bort bokningen 
         let btnRemoveRef = document.createElement("button");
         btnRemoveRef.classList.add("btn", "bg-danger", "text-white");
         btnRemoveRef.setAttribute("type", "button");
         btnRemoveRef.setAttribute("data-bocking-index", bookings.indexOf(newBooking));
         btnRemoveRef.innerHTML = "Boka av";
 
+        //Lägger till en klicklyssnare på knappen
         btnRemoveRef.addEventListener("click", () => {
+
+            //Hämtar tid och bana från nya bokningen 
             let timeRef = newBooking.Time;
             let courtRef = newBooking.Number;
 
+            //Kollar vilkne bana som bokningen gäller och lägger till den i dess vektor
+            //Bana 1
             if(courtRef == "Court 1"){
-                console.log("Court 1");
                 court1.time.push(timeRef);
             }
+            //Bana 2
             else if(courtRef == "Court 2"){
-                court2.time.add(timeRef);
+                court2.time.push(timeRef);
             }
+            //Bana 3
             else if(courtRef == "Court 3"){
                 court3.time.push(timeRef);
             }
+            //Bana 4
             else if(courtRef == "Court 4"){
                 court4.time.push(timeRef);
             }
+            //Bana 5
             else if(courtRef == "Court 5"){
                 court5.time.push(timeRef);
             }
 
+            //Tar bort bokning ifrån vetorn med bokningar
             let removeValue = btnRemoveRef.getAttribute("data-booking-index");
             bookings.splice(parseInt(removeValue), 1);
             loadBookings();
         })
 
+        //Lägger till knappen i den vänstra divn
         bookingsBodyRightRef.appendChild(btnRemoveRef);
 
+        //Lägger till den högra och vänstra div:n
         bookingBodyRef.appendChild(bookingsBodyLeftRef);
         bookingBodyRef.appendChild(bookingsBodyRightRef);   
         
+        //Lägger till div:n med bokningen i den stora div:n
         bookingsDivRef.appendChild(bookingBodyRef);
-
-        
+   
     }
-
-
 }
 
 //#endregion
