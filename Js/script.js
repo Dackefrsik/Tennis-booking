@@ -95,6 +95,11 @@ window.addEventListener("load", () => {
 
     courtFokus(imgRef);
 
+    let activeButtonRef = document.querySelector("#active");
+    activeButtonRef.addEventListener("click", () => {
+        console.log("active");
+    })
+
 });
 //#endregion
 
