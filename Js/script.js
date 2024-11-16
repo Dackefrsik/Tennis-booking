@@ -139,6 +139,15 @@ function createModalBoydy(img, i){
     let formRef = document.createElement("form");
     formRef.classList.add("form-group");
 
+    let dateRef = document.createElement("input");
+    dateRef.setAttribute("type", "date");
+    dateRef.classList.add("form-control", "mb-3");
+    let d = new Date();
+
+    //String().padStart(2,"0") ser till att det alltid finns två bokstäver och gör det inte det så lägger den till en nolla i början
+    dateRef.value = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0') + "-" + String(d.getDay()).padStart(2,'0');
+    formRef.appendChild(dateRef);
+
     //Skapar en select option som kan visa de tider som finns lediga
     let selectRef = document.createElement("select");
     selectRef.classList.add("form-select");
