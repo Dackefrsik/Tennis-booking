@@ -18,9 +18,6 @@
                         <li class="nav-item">
                             <div type="button" class="btn btn-success fs-4" id="active">Active bookings</div>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="#">Link</a>
-                        </li>
                     </ul>
                 </div>
             </div>
@@ -32,8 +29,11 @@
             
             <div class="row d-flex">
                 <!-- #region vänstra kolumnen --> 
-                <div class="col-6" id="bookings">
-                    
+                <div class="col-5" id="bookings">
+                    <input type="search" name="search" id="serch" class="form-control bg-light" placeholder="Search">
+                </div>
+                <div class="col-1">
+                    <div class="btn btn-primary">Filter</div>
                 </div>
                 <!-- #endregion -->
 
@@ -61,6 +61,36 @@
                 </div>
                 <!--#endregion-->
             </div>
+
+            <!--#region som visar vems bokning som är aktiv på respektive bana-->
+            <div class="row d-flex">
+                <div class="col-6"></div>
+                <div class="col-6 d-none d-md-block" id="activeBookings">
+                    <h3>Spelar nu</h3>
+                </div>
+            </div>
+
+            <div class="row d-flex">
+                <div class="col-6"></div>
+                <div class="col-6">
+                    <div class="Play1 d-flex flex-row">
+                        <h4>Court 1</h4>
+                    </div>
+                    <div class="Play2 d-flex flex-row">
+                        <h4>Court 2</h4>
+                    </div>
+                    <div class="Play3 d-flex flex-row">
+                        <h4>Court 3</h4>
+                    </div>
+                    <div class="Play4 d-flex flex-row">
+                        <h4>Court 4</h4>
+                    </div>
+                    <div class="Play5 d-flex flex-row">
+                        <h4>Court 5</h4>
+                    </div>
+                </div>
+            </div>
+            <!--#endregion-->
         </div>
 
         <!-- #region modal för att boka banan som klickats på-->
@@ -79,11 +109,12 @@
                 </div>
             </div>
         </div>
+
         <!--#endregion-->
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
         <script src="../Js/script.js"></script>
-    '</body>
+    </body>
 </html>

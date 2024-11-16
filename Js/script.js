@@ -97,9 +97,8 @@ window.addEventListener("load", () => {
 
     let activeButtonRef = document.querySelector("#active");
     activeButtonRef.addEventListener("click", () => {
-        console.log("active");
+        
     })
-
 });
 //#endregion
 
@@ -159,7 +158,7 @@ function createModalBoydy(img, i){
     //Bana 1
     if(courtNumber == 1){
         court1.time.sort();
-
+        
         //Går igenom alla tiderna
         for(let i = 0; i < court1.time.length; i++){
 
@@ -331,22 +330,66 @@ function confirmBooking(Court, time, name){
     //Sparar bokningen i en array
     bookings.push(newBooking);
 
-
     console.log(bookings);
 
-    loadBookings(newBooking);
+    loadBookings();
+
+    bookings.forEach(booking => {
+        if(oGlobalObject.hour + ":00" == booking.Time){
+            let h5Ref = document.createElement("h5");
+            h5Ref.classList.add("pt-1", "ms-3")
+            h5Ref.innerHTML = booking.Name
+
+
+            if(booking.Number == "Court 1"){
+                let activeDivRef = document.querySelector(".Play1");
+                if(activeDivRef.children.length < 2){
+                    activeDivRef.appendChild(h5Ref);
+                }
+            }
+            else if(booking.Number == "Court 2"){
+                let activeDivRef = document.querySelector(".Play2");
+                if(activeDivRef.children.length < 2){
+                    activeDivRef.appendChild(h5Ref);
+                }
+            }
+            else if(booking.Number == "Court 3"){
+                let activeDivRef = document.querySelector(".Play3");
+                if(activeDivRef.children.length < 2){
+                    activeDivRef.appendChild(h5Ref);
+                }
+            }
+            else if(booking.Number == "Court 4"){
+                let activeDivRef = document.querySelector(".Play4");
+                if(activeDivRef.children.length < 2){
+                    activeDivRef.appendChild(h5Ref);
+                }
+            }
+            else if(booking.Number == "Court 5"){
+                let activeDivRef = document.querySelector(".Play5");
+                if(activeDivRef.children.length < 2){
+                    activeDivRef.appendChild(h5Ref);
+                }
+            }
+        }
+        
+
+    });
+
 }
 
 //#endregion
 
 //#region laddar alla bokningar
 
-function loadBookings(newBooking){
+function loadBookings(){
 
     //Hämtar ut DIV:n som visar alla bokninger
     //Tömmer den för att inte visa dubletter
     let bookingsDivRef = document.querySelector("#bookings");
     bookingsDivRef.innerHTML = "";
+
+    let playDivs = document.querySelectorAll("[class^='Play']");
 
     //Loopar igenom alla bokningar
     for(let i = 0; i < bookings.length; i++){
@@ -357,7 +400,7 @@ function loadBookings(newBooking){
 
         //Skapar upp en div för högra och vänstra halvan
         let bookingsBodyLeftRef = document.createElement("div");
-        bookingsBodyRightRef.classList.add("align-self-end", "mb-3");
+        bookingsBodyLeftRef.classList.add("align-self-end", "mb-3");
         let bookingsBodyRightRef = document.createElement("div");
 
         //Skapar en h3:a för att visa vilken bana bokningen är gjord på
@@ -386,8 +429,8 @@ function loadBookings(newBooking){
         btnRemoveRef.addEventListener("click", () => {
 
             //Hämtar tid och bana från nya bokningen 
-            let timeRef = newBooking.Time;
-            let courtRef = newBooking.Number;
+            let timeRef = bookings[i].Time;
+            let courtRef = bookings[i].Number;
 
             //Kollar vilkne bana som bokningen gäller och lägger till den i dess vektor
             //Bana 1
@@ -410,6 +453,12 @@ function loadBookings(newBooking){
             else if(courtRef == "Court 5"){
                 court5.time.push(timeRef);
             }
+ 
+            //Tar bort bokningen från listan med aktiva bokningar ifall man behöver avbryta sin tid
+            if(playDivs[i].lastChild.innerHTML == bookings[i].Name && bookings[i].Time == oGlobalObject.hour + ":00"){
+                playDivs[i].removeChild(playDivs[i].lastChild);
+            }
+            
 
             //Tar bort bokning ifrån vetorn med bokningar
             let removeValue = btnRemoveRef.getAttribute("data-booking-index");
