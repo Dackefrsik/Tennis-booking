@@ -10,28 +10,32 @@ let court1 = {
 
 //#region attribut för court 2
 let court2 = {
-    time : ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"]
+    time : ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"],
+    days : []
 }
 
 //#endregion
 
 //#region attribut för court 3 
 let court3 = {
-    time : ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"]
+    time : ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"],
+    days : []
 }
 
 //#endregion
 
 //#region attribut för court 4
 let court4 = {
-    time : ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"]
+    time : ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"],
+    days : []
 }
 
 //#endregion
 
 //#region attribut för court 5
 let court5 = {
-    time : ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"]
+    time : ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"],
+    days : []
 }
 
 //#endregion
@@ -120,7 +124,6 @@ window.addEventListener("load", () => {
         court1.days.push(newDate.getDate());
 
        let dag = new day(newDate.getDate(), court1.time);
-       //console.log("dag" + dag.time);
        court1.days.push(dag);
     }
 
@@ -322,21 +325,6 @@ function createModalBoydy(img, i){
     confirmButtonRef.innerHTML = "Book";
     modalFooterRef.appendChild(confirmButtonRef);
 
-    /* const handelConfirmbutton = () => {
-        console.log("booking");
-        //Kollar om alla input fälten är ifyllda
-        if(selectRef.value != "Select time" && inputRef.value != undefined){
-            confirmBooking(modalHeaderRef.innerHTML, dateRef.value, selectRef.value, inputRef.value);
-        }
-
-    }
-
-    //Lägger till en lyssnare på knappen
-    confirmButtonRef.addEventListener("click", handelConfirmbutton)
-
-    confirmButtonRef.removeEventListener("click", handelConfirmbutton) */
-
-
     controleTime(confirmButtonRef, dateRef, selectRef, inputRef, modalHeaderRef);
 }
 
@@ -530,8 +518,6 @@ function controleTime(button, dateRef, selectRef, inputRef, modalHeaderRef){
 
     let dateChangeRef = document.querySelector("[type='date']");
 
-    let newBooking = null;
-
     dateChangeRef.addEventListener("change", () => {
         let changeDate = dateChangeRef.value;
 
@@ -561,7 +547,6 @@ function controleTime(button, dateRef, selectRef, inputRef, modalHeaderRef){
     button.addEventListener("click", () => {
         console.log(inputRef.value);
         confirmBooking(modalHeaderRef.innerHTML, dateRef.value,  selectRef.value, inputRef.value);
-        //bookings.push(newBooking);
 
         court1.days[i].time.forEach((time) => {
             if(time == selectRef.value){
@@ -569,19 +554,32 @@ function controleTime(button, dateRef, selectRef, inputRef, modalHeaderRef){
             }
         });
 
-        console.log("click");
-    });
-
-   /*  if(newBooking == null){
-        button.addEventListener("click", () => {
-            if(selectRef.value != "Select time" && inputRef.value != undefined){
-                confirmBooking(modalHeaderRef.innerHTML, dateRef.value, selectRef.value, inputRef.value);
+        court2.days[i].time.forEach((time) => {
+            if(time == selectRef.value){
+                court1.days[i].time.splice(court1.time.indexOf(time), 1);
             }
         });
-    } */
-    
 
-    
+        court3.days[i].time.forEach((time) => {
+            if(time == selectRef.value){
+                court1.days[i].time.splice(court1.time.indexOf(time), 1);
+            }
+        });
+
+        court4.days[i].time.forEach((time) => {
+            if(time == selectRef.value){
+                court1.days[i].time.splice(court1.time.indexOf(time), 1);
+            }
+        });
+
+        court5.days[i].time.forEach((time) => {
+            if(time == selectRef.value){
+                court1.days[i].time.splice(court1.time.indexOf(time), 1);
+            }
+        });
+
+        console.log("click");
+    });
 }
 
 //#endregion
