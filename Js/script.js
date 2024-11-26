@@ -2,7 +2,8 @@
 
 //#region attribut för court 1
 let court1 = {
-    time : ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"]
+    time : ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"],
+    days : []
 }
 
 //#endregion
@@ -35,12 +36,25 @@ let court5 = {
 
 //#endregion
 
+//#region Klass för objekt för dagar
+
+class day{
+
+    constructor(date, time){
+        this.date = date,
+        this.time = time
+    }
+}
+
+//#endregion
+
 //#region Obejkt för varje bokning
 
 class booking{
 
-    constructor(number, time, name){
+    constructor(number, date, time, name){
         this.Number = number,
+        this.date = date,
         this.Time = time,
         this.Name = name
     }
@@ -51,7 +65,7 @@ let bookings = [];
 
 //#endregion
 
-//#region 
+//#region timer objekt
 
 function upTimer(hour, min, second){
 
@@ -69,8 +83,6 @@ function upTimer(hour, min, second){
     }
 
     return oGlobalObject.hour = hour, oGlobalObject.min = min, oGlobalObject.second = second; 
-
-
 }
 
 //#endregion
@@ -98,7 +110,21 @@ window.addEventListener("load", () => {
     let activeButtonRef = document.querySelector("#active");
     activeButtonRef.addEventListener("click", () => {
         
-    })
+    });
+
+    let days = new Date();
+
+    for(let i = 0; i < 30; i++){
+        const newDate = new Date(days);
+        newDate.setDate(days.getDate() + i);
+        court1.days.push(newDate.getDate());
+
+       let dag = new day(newDate.getDate(), court1.time);
+       //console.log("dag" + dag.time);
+       court1.days.push(dag);
+    }
+
+
 });
 //#endregion
 
@@ -145,7 +171,8 @@ function createModalBoydy(img, i){
     let d = new Date();
 
     //String().padStart(2,"0") ser till att det alltid finns två bokstäver och gör det inte det så lägger den till en nolla i början
-    dateRef.value = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0') + "-" + String(d.getDay()).padStart(2,'0');
+    dateRef.value = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, '0') + "-" + String(d.getDate()).padStart(2,'0');
+    console.log(dateRef.value);
     formRef.appendChild(dateRef);
 
     //Skapar en select option som kan visa de tider som finns lediga
@@ -295,24 +322,29 @@ function createModalBoydy(img, i){
     confirmButtonRef.innerHTML = "Book";
     modalFooterRef.appendChild(confirmButtonRef);
 
-    //Lägger till en lyssnare på knappen
-    confirmButtonRef.addEventListener("click", () => {
+    let handelConfirmbutton = () => {
         //Kollar om alla input fälten är ifyllda
-        if(selectRef.value != "Select time" && inputRef.value != ""){
-            confirmBooking(modalHeaderRef.innerHTML, selectRef.value, inputRef.value);
+        if(selectRef.value != "Select time" && inputRef.value != undefined){
+            confirmBooking(modalHeaderRef.innerHTML, dateRef.value, selectRef.value, inputRef.value);
         }
+    }
 
-    })
+    //Lägger till en lyssnare på knappen
+    confirmButtonRef.addEventListener("click", () => {handelConfirmbutton})
+
+    confirmButtonRef.removeEventListener("click", () => {handelConfirmbutton})
+
+    controleTime(confirmButtonRef, dateRef, selectRef, inputRef, modalHeaderRef);
 }
 
 //#endregion
 
 //#region funktion för att genomföra en bokning
 
-function confirmBooking(Court, time, name){
+function confirmBooking(Court, date, time, name ){
 
     //Lägger en bokning 
-    let newBooking = new booking(Court, time, name);
+    let newBooking = new booking(Court, date, time, name);
 
     //Kollar vilken bana som tiden har bokats på och tar bort den
     //Bana 1
@@ -348,7 +380,6 @@ function confirmBooking(Court, time, name){
             let h5Ref = document.createElement("h5");
             h5Ref.classList.add("pt-1", "ms-3")
             h5Ref.innerHTML = booking.Name
-
 
             if(booking.Number == "Court 1"){
                 let activeDivRef = document.querySelector(".Play1");
@@ -431,7 +462,7 @@ function loadBookings(){
         let btnRemoveRef = document.createElement("button");
         btnRemoveRef.classList.add("btn", "bg-danger", "text-white");
         btnRemoveRef.setAttribute("type", "button");
-        btnRemoveRef.setAttribute("data-bocking-index", bookings.indexOf(newBooking));
+        btnRemoveRef.setAttribute("data-bocking-index", bookings.indexOf(bookings[i]));
         btnRemoveRef.innerHTML = "Boka av";
 
         //Lägger till en klicklyssnare på knappen
@@ -486,6 +517,55 @@ function loadBookings(){
         bookingsDivRef.appendChild(bookingBodyRef);
    
     }
+}
+
+//#endregion
+
+//#region funktionallitet till modal
+
+function controleTime(button, dateRef, selectRef, inputRef, modalHeaderRef){
+
+    let dateChangeRef = document.querySelector("[type='date']");
+
+    dateChangeRef.addEventListener("change", () => {
+        let changeDate = dateChangeRef.value;
+
+        let changeDateDay = changeDate.split("-")[2];
+    
+        let formSelectRef = document.querySelector(".form-select");
+        formSelectRef.innerHTML = "";
+
+        for(let i = 0; i < court1.days.length; i++){
+            if(changeDateDay == court1.days[i].date){
+
+                court1.days[i].time.forEach((time) => {
+                    
+                    if(time != undefined){
+                        let optionRef = document.createElement("option");
+                        optionRef.innerHTML = time; 
+                        formSelectRef.appendChild(optionRef);
+                    }  
+                })
+
+                button.addEventListener("click", () => {
+                    console.log(inputRef.value);
+                    let newBooking = confirmBooking(modalHeaderRef.innerHTML, dateRef.value,  selectRef.value, inputRef.value);
+                    bookings.push(newBooking);
+            
+                    court1.days[i].time.forEach((time) => {
+                        if(time == selectRef.value){
+                            court1.days[i].time.splice(court1.time.indexOf(time), 1);
+                        }
+                    });
+            
+                    console.log("click");
+                });
+
+            }
+        }    
+    });
+
+    
 }
 
 //#endregion

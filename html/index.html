@@ -26,72 +26,74 @@
             <h1>Tennis Court Booking</h1>
         </div>
         <div class="container">
-            
+
             <div class="row d-flex">
                 <!-- #region vänstra kolumnen --> 
-                <div class="col-5" id="bookings">
-                    <input type="search" name="search" id="serch" class="form-control bg-light" placeholder="Search">
-                </div>
-                <div class="col-1">
-                    <div class="btn btn-primary">Filter</div>
+                <div class="col-6">
+                    <div class="col-12 d-flex" >
+                        <input type="search" name="search" id="serch" class="form-control bg-light" placeholder="Search">
+                        <div class="btn btn-primary ms-1">Filter</div>
+                    </div>
+                    <div class="col-12 mt-2" id="bookings">
+                        
+                    </div>
                 </div>
                 <!-- #endregion -->
 
-                <!-- #region högra kolumnen bilderna på tennisbanorna -->
-                <div class="col-6 d-none d-md-block ">
-                    <div class="row bg-body-secondary">
-                        <div class="col-4 bg-body-secondary">
-                            <img src="../assets/img/Court2.png" alt="Court2" class="img-fluid mt-3 w-100 me-5"  data-bs-toggle="modal" data-bs-target="#modalCourt" data-court-number="2">
+                <div class="col-6 d-none d-md-block">
+                    <!-- #region högra kolumnen bilderna på tennisbanorna -->
+                    <div class="col-12">
+                        <div class="row bg-body-secondary">
+                            <div class="col-4 bg-body-secondary">
+                                <img src="../assets/img/Court2.png" alt="Court2" class="img-fluid mt-3 w-100 me-5"  data-bs-toggle="modal" data-bs-target="#modalCourt" data-court-number="2">
+                            </div>
+                            <div class="col-4 bg-body-secondary">
+                                <img src="../assets/img/Court3.png" alt="Court3" class="img-fluid mt-3 w-100 me-5" data-bs-toggle="modal" data-bs-target="#modalCourt" data-court-number="3">
+                            </div>
+                            <div class="col-4 bg-body-secondary">
+                                <img src="../assets/img/Court4.png" alt="Court4" class="img-fluid mt-3 w-100 me-5" data-bs-toggle="modal" data-bs-target="#modalCourt" data-court-number="4">
+                            </div>
                         </div>
-                        <div class="col-4 bg-body-secondary">
-                            <img src="../assets/img/Court3.png" alt="Court3" class="img-fluid mt-3 w-100 me-5" data-bs-toggle="modal" data-bs-target="#modalCourt" data-court-number="3">
-                        </div>
-                        <div class="col-4 bg-body-secondary">
-                            <img src="../assets/img/Court4.png" alt="Court4" class="img-fluid mt-3 w-100 me-5" data-bs-toggle="modal" data-bs-target="#modalCourt" data-court-number="4">
+                        <div class="row bg-body-secondary">
+                            <div class="col-6 bg-body-secondary">
+                                <img src="../assets/img/Court1.png" alt="Court1" class="img-fluid mb-3 mt-5 w-100" data-bs-toggle="modal" data-bs-target="#modalCourt" data-court-number="1">
+                            </div>
+                            <div class="col-6 bg-body-secondary">
+                                <img src="../assets/img/Court5.png" alt="Court5" class="img-fluid mb-3 mt-5 w-100" data-bs-toggle="modal" data-bs-target="#modalCourt" data-court-number="5">
+                            </div>
                         </div>
                     </div>
-                    <div class="row bg-body-secondary">
-                        <div class="col-6 bg-body-secondary">
-                            <img src="../assets/img/Court1.png" alt="Court1" class="img-fluid mb-3 mt-5 w-100" data-bs-toggle="modal" data-bs-target="#modalCourt" data-court-number="1">
-                        </div>
-                        <div class="col-6 bg-body-secondary">
-                            <img src="../assets/img/Court5.png" alt="Court5" class="img-fluid mb-3 mt-5 w-100" data-bs-toggle="modal" data-bs-target="#modalCourt" data-court-number="5">
-                        </div>
-                    </div>
-                </div>
-                <!--#endregion-->
-            </div>
+                    <!--#endregion-->
 
-            <!--#region som visar vems bokning som är aktiv på respektive bana-->
-            <div class="row d-flex">
-                <div class="col-6"></div>
-                <div class="col-6 d-none d-md-block" id="activeBookings">
-                    <h3>Spelar nu</h3>
+                    <!--#region som visar vems bokning som är aktiv på respektive bana-->
+                    <div class="col-12">
+                        <div class="col-12 d-none d-md-block" id="activeBookings">
+                            <h3>Spelar nu</h3>
+                            <div class="col-6">
+                                <div class="Play1 d-flex flex-row">
+                                    <h4>Court 1</h4>
+                                </div>
+                                <div class="Play2 d-flex flex-row">
+                                    <h4>Court 2</h4>
+                                </div>
+                                <div class="Play3 d-flex flex-row">
+                                    <h4>Court 3</h4>
+                                </div>
+                                <div class="Play4 d-flex flex-row">
+                                    <h4>Court 4</h4>
+                                </div>
+                                <div class="Play5 d-flex flex-row">
+                                    <h4>Court 5</h4>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--#endregion-->
                 </div>
             </div>
-
-            <div class="row d-flex">
-                <div class="col-6"></div>
-                <div class="col-6">
-                    <div class="Play1 d-flex flex-row">
-                        <h4>Court 1</h4>
-                    </div>
-                    <div class="Play2 d-flex flex-row">
-                        <h4>Court 2</h4>
-                    </div>
-                    <div class="Play3 d-flex flex-row">
-                        <h4>Court 3</h4>
-                    </div>
-                    <div class="Play4 d-flex flex-row">
-                        <h4>Court 4</h4>
-                    </div>
-                    <div class="Play5 d-flex flex-row">
-                        <h4>Court 5</h4>
-                    </div>
-                </div>
-            </div>
-            <!--#endregion-->
         </div>
+                
+        
 
         <!-- #region modal för att boka banan som klickats på-->
         <div class="modal" id="modalCourt" tabindex="-1">
