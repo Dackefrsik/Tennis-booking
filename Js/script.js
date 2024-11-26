@@ -322,17 +322,20 @@ function createModalBoydy(img, i){
     confirmButtonRef.innerHTML = "Book";
     modalFooterRef.appendChild(confirmButtonRef);
 
-    let handelConfirmbutton = () => {
+    /* const handelConfirmbutton = () => {
+        console.log("booking");
         //Kollar om alla input fälten är ifyllda
         if(selectRef.value != "Select time" && inputRef.value != undefined){
             confirmBooking(modalHeaderRef.innerHTML, dateRef.value, selectRef.value, inputRef.value);
         }
+
     }
 
     //Lägger till en lyssnare på knappen
-    confirmButtonRef.addEventListener("click", () => {handelConfirmbutton})
+    confirmButtonRef.addEventListener("click", handelConfirmbutton)
 
-    confirmButtonRef.removeEventListener("click", () => {handelConfirmbutton})
+    confirmButtonRef.removeEventListener("click", handelConfirmbutton) */
+
 
     controleTime(confirmButtonRef, dateRef, selectRef, inputRef, modalHeaderRef);
 }
@@ -365,7 +368,7 @@ function confirmBooking(Court, date, time, name ){
     }
     //Bana 5
     else if(Court == "Court 5"){
-        court5.time.splice(court5.time.indexOf(time.toString()), 1);
+        court5.time.splice(court5.time.indexOf(time), 1);
     }
 
     //Sparar bokningen i en array
@@ -527,6 +530,8 @@ function controleTime(button, dateRef, selectRef, inputRef, modalHeaderRef){
 
     let dateChangeRef = document.querySelector("[type='date']");
 
+    let newBooking = null;
+
     dateChangeRef.addEventListener("change", () => {
         let changeDate = dateChangeRef.value;
 
@@ -547,23 +552,34 @@ function controleTime(button, dateRef, selectRef, inputRef, modalHeaderRef){
                     }  
                 })
 
-                button.addEventListener("click", () => {
-                    console.log(inputRef.value);
-                    let newBooking = confirmBooking(modalHeaderRef.innerHTML, dateRef.value,  selectRef.value, inputRef.value);
-                    bookings.push(newBooking);
-            
-                    court1.days[i].time.forEach((time) => {
-                        if(time == selectRef.value){
-                            court1.days[i].time.splice(court1.time.indexOf(time), 1);
-                        }
-                    });
-            
-                    console.log("click");
-                });
+                
 
             }
         }    
     });
+
+    button.addEventListener("click", () => {
+        console.log(inputRef.value);
+        confirmBooking(modalHeaderRef.innerHTML, dateRef.value,  selectRef.value, inputRef.value);
+        //bookings.push(newBooking);
+
+        court1.days[i].time.forEach((time) => {
+            if(time == selectRef.value){
+                court1.days[i].time.splice(court1.time.indexOf(time), 1);
+            }
+        });
+
+        console.log("click");
+    });
+
+   /*  if(newBooking == null){
+        button.addEventListener("click", () => {
+            if(selectRef.value != "Select time" && inputRef.value != undefined){
+                confirmBooking(modalHeaderRef.innerHTML, dateRef.value, selectRef.value, inputRef.value);
+            }
+        });
+    } */
+    
 
     
 }
