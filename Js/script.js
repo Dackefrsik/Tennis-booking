@@ -56,7 +56,8 @@ class day{
 
 class booking{
 
-    constructor(number, date, time, name){
+    constructor(bkNumber,number, date, time, name){
+        this.bkNumber = bkNumber,
         this.Number = number,
         this.Date = date,
         this.Time = time,
@@ -127,6 +128,15 @@ window.addEventListener("load", () => {
        court1.days.push(dag);
     }
 
+    let searchRef = document.querySelector("#search");
+
+    console.log(searchRef);
+
+    searchRef.addEventListener("input", () => {
+
+        searchResault(searchRef.value);
+
+    })
 
 });
 //#endregion
@@ -230,7 +240,7 @@ function createModalBoydy(img){
         for(let i = 0; i < court2.time.length; i++){
 
             //Splittar tiderna som finns i vektorn på :
-            let splitTimer = court1.time[i].split(":");
+            let splitTimer = court2.time[i].split(":");
             let timeHoure = parseInt(splitTimer[0]);
             let timeMin = parseInt(splitTimer[1]);
 
@@ -251,7 +261,7 @@ function createModalBoydy(img){
         for(let i = 0; i < court3.time.length; i++){
 
             //Splittar tiderna som finns i vektorn på :
-            let splitTimer = court1.time[i].split(":");
+            let splitTimer = court3.time[i].split(":");
             let timeHoure = parseInt(splitTimer[0]);
             let timeMin = parseInt(splitTimer[1]);
 
@@ -272,7 +282,7 @@ function createModalBoydy(img){
         for(let i = 0; i < court4.time.length; i++){
 
             //Splittar tiderna som finns i vektorn på :                
-            let splitTimer = court1.time[i].split(":");
+            let splitTimer = court4.time[i].split(":");
             let timeHoure = parseInt(splitTimer[0]);
             let timeMin = parseInt(splitTimer[1]);
 
@@ -293,7 +303,7 @@ function createModalBoydy(img){
         for(let i = 0; i < court5.time.length; i++){
 
             //Splittar tiderna som finns i vektorn på :
-            let splitTimer = court1.time[i].split(":");
+            let splitTimer = court5.time[i].split(":");
             let timeHoure = parseInt(splitTimer[0]);
             let timeMin = parseInt(splitTimer[1]);
 
@@ -345,10 +355,10 @@ function createModalBoydy(img){
 
 //#region funktion för att genomföra en bokning
 
-function confirmBooking(Court, date, time, name ){
+function confirmBooking(bkNumber, Court, date, time, name ){
 
     //Lägger en bokning 
-    let newBooking = new booking(Court, date, time, name);
+    let newBooking = new booking(bkNumber, Court, date, time, name);
 
     //Kollar vilken bana som tiden har bokats på och tar bort den
     //Bana 1
@@ -440,6 +450,7 @@ function loadBookings(){
         //skapar upp en div som visar bokningen
         let bookingBodyRef = document.createElement("div");
         bookingBodyRef.classList.add("mb-2","ps-3", "pt-2", "pe-3", "border", "rounded", "d-flex", "justify-content-between");
+        bookingBodyRef.setAttribute("booking-number", bookings[i].bkNumber);
 
         //Skapar upp en div för högra och vänstra halvan
         let bookingsBodyLeftRef = document.createElement("div");
@@ -603,12 +614,33 @@ function controleTime(button, dateRef, selectRef, inputRef, modalHeaderRef, labe
             //Sätter kontrollen till False så det inte skapas två objekt
             bookingProgress = false;
 
-            confirmBooking(modalHeaderRef.innerHTML, dateRef.value,  selectRef.value, inputRef.value);
+            confirmBooking(bookings.length + 1, modalHeaderRef.innerHTML, dateRef.value,  selectRef.value, inputRef.value);
 
             button.setAttribute("data-bs-dismiss", "modal");
             button.click();
         }
     });
 }
+
+//#endregion
+
+//#region Sök filtrering
+function searchResault(searchInput){
+
+    bookings.forEach((booking) => {
+        let bookingNumberRef = document.querySelector('[booking-number="'+ booking.bkNumber + '"]');
+
+        //Kollar om det som står i sökrutan matchar något i bookningen och trar bort d-none
+        if(searchInput == "" || (searchInput != "" && (booking.Number.includes(searchInput) || booking.Time.includes(searchInput) || booking.Name.includes(searchInput) || booking.Date.includes(searchInput) ))){
+            bookingNumberRef.classList.remove("d-none");
+        }
+        //Annars gömmer den bokningen genom d-none
+        else{
+            bookingNumberRef.classList.add("d-none");
+        }
+
+    })
+}
+
 
 //#endregion
