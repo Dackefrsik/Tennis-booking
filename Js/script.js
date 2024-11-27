@@ -58,7 +58,7 @@ class booking{
 
     constructor(number, date, time, name){
         this.Number = number,
-        this.date = date,
+        this.Date = date,
         this.Time = time,
         this.Name = name
     }
@@ -144,7 +144,7 @@ function courtFokus(imgRef){
         })
 
         imgRef[i].addEventListener("click", () =>{
-            createModalBoydy(imgRef[i], i)
+            createModalBoydy(imgRef[i])
         })
 
     }
@@ -154,7 +154,7 @@ function courtFokus(imgRef){
 
 //#region funktion som skapar en modalbody
 
-function createModalBoydy(img, i){
+function createModalBoydy(img){
 
     //Hämtar ut headern och skriver ut vilken bana som man kollar tider för
     let modalHeaderRef = document.querySelector(".modal-title");
@@ -167,10 +167,11 @@ function createModalBoydy(img, i){
     modalBodyRef.innerHTML = "";
     let formRef = document.createElement("form");
     formRef.classList.add("form-group");
+    //formRef.style.height = "15rem"; 
 
     let dateRef = document.createElement("input");
     dateRef.setAttribute("type", "date");
-    dateRef.classList.add("form-control", "mb-3");
+    dateRef.classList.add("form-control", "mb-1");
     let d = new Date();
 
     //String().padStart(2,"0") ser till att det alltid finns två bokstäver och gör det inte det så lägger den till en nolla i början
@@ -178,9 +179,16 @@ function createModalBoydy(img, i){
     console.log(dateRef.value);
     formRef.appendChild(dateRef);
 
+    let labelSelectRef = document.createElement("lable");
+    labelSelectRef.setAttribute("for", "select");
+    labelSelectRef.classList.add("text-danger");
+    labelSelectRef.innerHTML = "*";
+    formRef.appendChild(labelSelectRef);
+
     //Skapar en select option som kan visa de tider som finns lediga
     let selectRef = document.createElement("select");
     selectRef.classList.add("form-select");
+    selectRef.setAttribute("id", "slect");
     let optionRef = document.createElement("option");
     optionRef.setAttribute("selected", true);
     optionRef.setAttribute("disabled", true);
@@ -190,7 +198,6 @@ function createModalBoydy(img, i){
     //Skriver ut tiderna beroende på vilken banan som användaren har klickat på
 
     //Parsar tiderna från objektet
-
     let objHour = parseInt(oGlobalObject.hour);
     let objMin = parseInt(oGlobalObject.min);
 
@@ -302,11 +309,18 @@ function createModalBoydy(img, i){
 
     formRef.appendChild(selectRef);
 
+    let labelNameRef = document.createElement("lable");
+    labelNameRef.setAttribute("for", "name");
+    labelNameRef.classList.add("text-danger");
+    labelNameRef.innerHTML = "*";
+    formRef.appendChild(labelNameRef);
+
     //Skapar ett input fällt för namn
     let inputRef = document.createElement("input");
+    inputRef.setAttribute("id", "name");
     inputRef.setAttribute("type", "text");
     inputRef.setAttribute("placeholder", "Name");
-    inputRef.classList.add("form-control", "mt-3");
+    inputRef.classList.add("form-control", "mt-2");
     formRef.appendChild(inputRef);
 
     //Lägger till fomuläret i modalens kropp 
@@ -320,12 +334,11 @@ function createModalBoydy(img, i){
     //Skapar en knapp som genomför bokningar
     let confirmButtonRef = document.createElement("button");
     confirmButtonRef.classList.add("btn", "btn-success");
-    confirmButtonRef.setAttribute("data-bs-dismiss", "modal");
     confirmButtonRef.setAttribute("type", "button");
     confirmButtonRef.innerHTML = "Book";
     modalFooterRef.appendChild(confirmButtonRef);
 
-    controleTime(confirmButtonRef, dateRef, selectRef, inputRef, modalHeaderRef);
+    controleTime(confirmButtonRef, dateRef, selectRef, inputRef, modalHeaderRef, labelSelectRef, labelNameRef);
 }
 
 //#endregion
@@ -366,6 +379,8 @@ function confirmBooking(Court, date, time, name ){
 
     loadBookings();
 
+    //Går igenom alla boknnigar
+    //För aktiva bokningar, kanske ska tas bort och flyttas
     bookings.forEach(booking => {
         if(oGlobalObject.hour + ":00" == booking.Time){
             let h5Ref = document.createElement("h5");
@@ -403,10 +418,7 @@ function confirmBooking(Court, date, time, name ){
                 }
             }
         }
-        
-
     });
-
 }
 
 //#endregion
@@ -443,6 +455,11 @@ function loadBookings(){
         let timeRef = document.createElement("h5");
         timeRef.innerHTML = "Time: " + bookings[i].Time;
         bookingsBodyLeftRef.appendChild(timeRef);
+
+        //Skapar en h6:a för datum
+        let dateRef = document.createElement("h6");
+        dateRef.innerHTML = "Date: " + bookings[i].Date;
+        bookingsBodyLeftRef.appendChild(dateRef);
 
         //Skriver ut ett namn så att vi vet vem som gjort bokningen
         let nameRef = document.createElement("p");
@@ -497,6 +514,12 @@ function loadBookings(){
             loadBookings();
         })
 
+        let date = new Date();
+
+        if(bookings.date == date.getDate()){
+            console.log("yey");
+        }
+
         //Lägger till knappen i den vänstra divn
         bookingsBodyRightRef.appendChild(btnRemoveRef);
 
@@ -509,23 +532,32 @@ function loadBookings(){
    
     }
 }
-
 //#endregion
 
 //#region funktionallitet till modal
 
-function controleTime(button, dateRef, selectRef, inputRef, modalHeaderRef){
+function controleTime(button, dateRef, selectRef, inputRef, modalHeaderRef, labelSelectRef, labelNameRef){
 
     let dateChangeRef = document.querySelector("[type='date']");
+    let formSelectRef = document.querySelector(".form-select");
 
+    //kollar om användaren har bytt datum
     dateChangeRef.addEventListener("change", () => {
+        
+        //Kollar så att sissta värdet matchar med någon dag i banans atribut med objekt för dagar
         let changeDate = dateChangeRef.value;
-
         let changeDateDay = changeDate.split("-")[2];
     
-        let formSelectRef = document.querySelector(".form-select");
         formSelectRef.innerHTML = "";
 
+        //Påbörjar våran select option 
+        let optionRef = document.createElement("option");
+        optionRef.setAttribute("selected", true);
+        optionRef.setAttribute("disabled", true);
+        optionRef.innerHTML = "Select time";
+        formSelectRef.appendChild(optionRef);
+
+        //Lopar igenom och skrive ut alla tider som är lediga för det datum som väljs
         for(let i = 0; i < court1.days.length; i++){
             if(changeDateDay == court1.days[i].date){
 
@@ -535,50 +567,47 @@ function controleTime(button, dateRef, selectRef, inputRef, modalHeaderRef){
                         let optionRef = document.createElement("option");
                         optionRef.innerHTML = time; 
                         formSelectRef.appendChild(optionRef);
+
                     }  
                 })
-
-                
-
             }
-        }    
+        } 
     });
 
+    //Boolean för inloggnigsprocessen
+    let bookingProgress = true;
+
+    //Knappen som genomför en bokning
     button.addEventListener("click", () => {
-        console.log(inputRef.value);
-        confirmBooking(modalHeaderRef.innerHTML, dateRef.value,  selectRef.value, inputRef.value);
+        
+        //Tar ut och nollar felmedelandet för time
+        let timePRef = document.querySelector(".time");
+        if(timePRef != null){
+            labelSelectRef.classList.remove("time");
+            labelSelectRef.innerHTML = "*";
+        }
 
-        court1.days[i].time.forEach((time) => {
-            if(time == selectRef.value){
-                court1.days[i].time.splice(court1.time.indexOf(time), 1);
-            }
-        });
+        //Felmedelande för time
+        if(selectRef.value == "Select time"){
+           
+            labelSelectRef.innerHTML = "* Select time!";
+            labelSelectRef.classList.add("time");
+        }
+        //Felmedelande för namn
+        else if(inputRef.value == ""){
+            labelNameRef.innerHTML = "* Write your name!";
+        }
+        //Kollar om vi kan fortsätta och skapa objektet för bokningen
+        else if(bookingProgress){
+            
+            //Sätter kontrollen till False så det inte skapas två objekt
+            bookingProgress = false;
 
-        court2.days[i].time.forEach((time) => {
-            if(time == selectRef.value){
-                court1.days[i].time.splice(court1.time.indexOf(time), 1);
-            }
-        });
+            confirmBooking(modalHeaderRef.innerHTML, dateRef.value,  selectRef.value, inputRef.value);
 
-        court3.days[i].time.forEach((time) => {
-            if(time == selectRef.value){
-                court1.days[i].time.splice(court1.time.indexOf(time), 1);
-            }
-        });
-
-        court4.days[i].time.forEach((time) => {
-            if(time == selectRef.value){
-                court1.days[i].time.splice(court1.time.indexOf(time), 1);
-            }
-        });
-
-        court5.days[i].time.forEach((time) => {
-            if(time == selectRef.value){
-                court1.days[i].time.splice(court1.time.indexOf(time), 1);
-            }
-        });
-
-        console.log("click");
+            button.setAttribute("data-bs-dismiss", "modal");
+            button.click();
+        }
     });
 }
 
