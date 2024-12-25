@@ -1,42 +1,31 @@
 "use strict";
 
 //#region attribut för court 1
-let court1 = {
-    time : ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"],
-    days : []
-}
+
+let court1Days = [];
 
 //#endregion
 
 //#region attribut för court 2
-let court2 = {
-    time : ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"],
-    days : []
-}
+
+let court2Days = [];
 
 //#endregion
 
 //#region attribut för court 3 
-let court3 = {
-    time : ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"],
-    days : []
-}
+let court3Days = [];
 
 //#endregion
 
 //#region attribut för court 4
-let court4 = {
-    time : ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"],
-    days : []
-}
+let court4Days = [];
+
 
 //#endregion
 
 //#region attribut för court 5
-let court5 = {
-    time : ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"],
-    days : []
-}
+let court5Days = [];
+
 
 //#endregion
 
@@ -92,8 +81,16 @@ function upTimer(hour, min, second){
 
 //#endregion
 
+window.oGlobalObject = {
+    clickedCourt : null
+}
+
 //#region window load
 window.addEventListener("load", () => {
+
+    //Vektor med alla tider för en dag
+    let time = ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"];
+
 
     window.oGlobalObject = {
         timer : null,
@@ -119,14 +116,39 @@ window.addEventListener("load", () => {
 
     let days = new Date();
 
+    console.log("Dag1: " + days.getDate());
+
     for(let i = 0; i < 30; i++){
+        let time = ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"];
+
         const newDate = new Date(days);
         newDate.setDate(days.getDate() + i);
-        court1.days.push(newDate.getDate());
 
-       let dag = new day(newDate.getDate(), court1.time);
-       court1.days.push(dag);
+       let dag = new day(newDate.getDate(), time);
+    
+
+
+       //Lägger till dagarna för varje bana
+       court1Days.push(dag);
+       court2Days.push(dag);
+       court3Days.push(dag);
+       court4Days.push(dag);
+       court5Days.push(dag);
     }
+
+    console.log(court1Days[0]);
+
+    for(let i = 0; i < court1Days[0].time.length; i++){
+        let saveHour = court1Days[0].time[i].split(":");
+        console.log(saveHour)
+        console.log(oGlobalObject.hour + ":00");
+        if(parseInt(saveHour[0]) < parseInt(oGlobalObject.hour)){
+            console.log("y")
+            court1Days[0].time[i] = undefined;
+        }
+    }
+
+    console.log(court1Days);
 
     let searchRef = document.querySelector("#search");
 
@@ -154,6 +176,7 @@ function courtFokus(imgRef){
         })
 
         imgRef[i].addEventListener("click", () =>{
+            oGlobalObject.clickedCourt = imgRef[i];
             createModalBoydy(imgRef[i])
         })
 
@@ -211,108 +234,130 @@ function createModalBoydy(img){
     let objHour = parseInt(oGlobalObject.hour);
     let objMin = parseInt(oGlobalObject.min);
 
+    //Sorterar vektorerna så tiderna kommer i rätt ordning
+    for(let i = 0; i < court1Days.length; i++){
+        court1Days[i].time.sort();
+        court2Days[i].time.sort();
+        court3Days[i].time.sort();
+        court4Days[i].time.sort();
+        court5Days[i].time.sort();
+
+    }
+
+    let splitDate = dateRef.value.split("-");
+
     //Bana 1
     if(courtNumber == 1){
-        court1.time.sort();
-        
+
         //Går igenom alla tiderna
-        for(let i = 0; i < court1.time.length; i++){
+        for(let i = 0; i < court1Days.length; i++){
 
-            //Splittar tiderna som finns i vektorn på :
-            let splitTimer = court1.time[i].split(":");
-            let timeHoure = parseInt(splitTimer[0]);
-            let timeMin = parseInt(splitTimer[1]);
+            if(splitDate[2] == court1Days[i].date){
+                for(let j = 0; j < court1Days[i].time.length; j ++){
+                    let splitTimer = "";
+                    //Splittar tiderna som finns i vektorn på :
+                    if(court1Days[i].time[j] != undefined){
+                        splitTimer = court1Days[i].time[j].split(":");
+                    }
+                    let timeHoure = parseInt(splitTimer[0]);
+                    let timeMin = parseInt(splitTimer[1]);
 
-            //Kollar om tiden ska gå att boka
-            if(court1.time[i] != undefined && (timeHoure > objHour || (timeHoure === objHour && timeMin >= objMin))){
-                let optionRef = document.createElement("option");
-                optionRef.setAttribute("value", court1.time[i]);
-                optionRef.innerHTML = court1.time[i];
-                selectRef.appendChild(optionRef);
-            } 
+                    //Kollar om tiden ska gå att boka
+                    if(court1Days[i].time[j] != undefined){
+                        let optionRef = document.createElement("option");
+                        optionRef.setAttribute("value", court1Days[i].time[j]);
+                        optionRef.innerHTML = court1Days[i].time[j];
+                        selectRef.appendChild(optionRef);
+                    } 
+                }
+            }
         }
     }
     //Bana 2
     else if(courtNumber == 2){
-        court2.time.sort();
+        for(let i = 0; i < court2Days.length; i){
+            if(splitDate[2] == court2Days[i].date){
 
-        //Går igenom alla tiderna
-        for(let i = 0; i < court2.time.length; i++){
+                for(let j = 0; j < court2Days[i].time.length; j ++){
+                    //Splittar tiderna som finns i vektorn på :
+                    let splitTimer = court2Days[i].time[j].split(":");
+                    let timeHoure = parseInt(splitTimer[0]);
+                    let timeMin = parseInt(splitTimer[1]);
 
-            //Splittar tiderna som finns i vektorn på :
-            let splitTimer = court2.time[i].split(":");
-            let timeHoure = parseInt(splitTimer[0]);
-            let timeMin = parseInt(splitTimer[1]);
-
-            //Kollar om tiden ska gå att boka
-            if(court2.time[i] != undefined && (timeHoure > objHour || (timeHoure === objHour && timeMin >= objMin))){
-                let optionRef = document.createElement("option");
-                optionRef.setAttribute("value", court2.time[i]);
-                optionRef.innerHTML = court2.time[i];
-                selectRef.appendChild(optionRef);
+                    //Kollar om tiden ska gå att boka
+                    if(court2Days[i].time[j] != undefined && (timeHoure > objHour || (timeHoure === objHour && timeMin >= objMin))){
+                        let optionRef = document.createElement("option");
+                        optionRef.setAttribute("value", court2Days[i].time[j]);
+                        optionRef.innerHTML = court2Days[i].time[j];
+                        selectRef.appendChild(optionRef);
+                    } 
+                }
             }
         }
     }
     //Bana 3
     else if(courtNumber == 3){
-        court3.time.sort();
+        for(let i = 0; i < court3Days.length; i){
+            if(splitDate[2] == court3Days[i].date){
 
-        //Går igenom alla tiderna
-        for(let i = 0; i < court3.time.length; i++){
+                for(let j = 0; j < court3Days[i].time.length; j ++){
+                    //Splittar tiderna som finns i vektorn på :
+                    let splitTimer = court3Days[i].time[j].split(":");
+                    let timeHoure = parseInt(splitTimer[0]);
+                    let timeMin = parseInt(splitTimer[1]);
 
-            //Splittar tiderna som finns i vektorn på :
-            let splitTimer = court3.time[i].split(":");
-            let timeHoure = parseInt(splitTimer[0]);
-            let timeMin = parseInt(splitTimer[1]);
-
-            //Kollar om tiden ska gå att boka
-            if(court3.time[i] != undefined && (timeHoure > objHour || (timeHoure === objHour && timeMin >= objMin))){
-                let optionRef = document.createElement("option");
-                optionRef.setAttribute("value", court3.time[i]);
-                optionRef.innerHTML = court3.time[i];
-                selectRef.appendChild(optionRef);
+                    //Kollar om tiden ska gå att boka
+                    if(court3Days[i].time[j] != undefined && (timeHoure > objHour || (timeHoure === objHour && timeMin >= objMin))){
+                        let optionRef = document.createElement("option");
+                        optionRef.setAttribute("value", court3Days[i].time[j]);
+                        optionRef.innerHTML = court3Days[i].time[j];
+                        selectRef.appendChild(optionRef);
+                    } 
+                }
             }
         }
     }
     //Bana 4
     else if(courtNumber == 4){
-        court4.time.sort();
+        for(let i = 0; i < court4Days.length; i){
+            if(splitDate[2] == court4Days[i].date){
 
-        //Går igenom alla tiderna
-        for(let i = 0; i < court4.time.length; i++){
+                for(let j = 0; j < court4Days[i].time.length; j ++){
+                    //Splittar tiderna som finns i vektorn på :
+                    let splitTimer = court4Days[i].time[j].split(":");
+                    let timeHoure = parseInt(splitTimer[0]);
+                    let timeMin = parseInt(splitTimer[1]);
 
-            //Splittar tiderna som finns i vektorn på :                
-            let splitTimer = court4.time[i].split(":");
-            let timeHoure = parseInt(splitTimer[0]);
-            let timeMin = parseInt(splitTimer[1]);
-
-            //Kollar om tiden ska gå att boka
-            if(court4.time[i] != undefined && (timeHoure > objHour || timeHoure === objHour && timeMin >= objMin)){
-            let optionRef = document.createElement("option");
-            optionRef.setAttribute("value", court4.time[i]);
-            optionRef.innerHTML = court4.time[i];
-            selectRef.appendChild(optionRef);
+                    //Kollar om tiden ska gå att boka
+                    if(court4Days[i].time[j] != undefined && (timeHoure > objHour || (timeHoure === objHour && timeMin >= objMin))){
+                        let optionRef = document.createElement("option");
+                        optionRef.setAttribute("value", court4Days[i].time[j]);
+                        optionRef.innerHTML = court4Days[i].time[j];
+                        selectRef.appendChild(optionRef);
+                    } 
+                }
             }
         }
     }
     //Bana 5
     else if(courtNumber == 5){
-        court5.time.sort();
+        for(let i = 0; i < court1Days.length; i){
+            if(splitDate[2] == court5Days[i].date){
 
-        //Går igenom alla tiderna
-        for(let i = 0; i < court5.time.length; i++){
+                for(let j = 0; j < court5Days[i].time.length; j ++){
+                    //Splittar tiderna som finns i vektorn på :
+                    let splitTimer = court1Days[i].time[j].split(":");
+                    let timeHoure = parseInt(splitTimer[0]);
+                    let timeMin = parseInt(splitTimer[1]);
 
-            //Splittar tiderna som finns i vektorn på :
-            let splitTimer = court5.time[i].split(":");
-            let timeHoure = parseInt(splitTimer[0]);
-            let timeMin = parseInt(splitTimer[1]);
-
-            //Kollar om tiden ska gå att boka
-            if(court5.time[i] != undefined && (timeHoure > objHour || (timeHoure === objHour && timeMin >= objMin))){
-                let optionRef = document.createElement("option");
-                optionRef.setAttribute("value", court5.time[i]);
-                optionRef.innerHTML = court5.time[i];
-                selectRef.appendChild(optionRef);
+                    //Kollar om tiden ska gå att boka
+                    if(court5Days[i].time[j] != undefined && (timeHoure > objHour || (timeHoure === objHour && timeMin >= objMin))){
+                        let optionRef = document.createElement("option");
+                        optionRef.setAttribute("value", court5Days[i].time[j]);
+                        optionRef.innerHTML = court1Days[i].time[j];
+                        selectRef.appendChild(optionRef);
+                    } 
+                }
             }
         }
     }
@@ -360,26 +405,50 @@ function confirmBooking(bkNumber, Court, date, time, name ){
     //Lägger en bokning 
     let newBooking = new booking(bkNumber, Court, date, time, name);
 
+    let dayNumber = date.split("-");
+
+    console.log(dayNumber);
+
     //Kollar vilken bana som tiden har bokats på och tar bort den
     //Bana 1
     if(Court == "Court 1"){
-        court1.time.splice(court1.time.indexOf(time), 1);
+        for(let i = 0; i < court1Days.length; i++){
+            if(dayNumber[2] == court1Days[i].date){
+                court1Days[i].time.splice(court1Days[i].time.indexOf(time), 1);
+            }
+        }
     }
     //Bana 2
     else if(Court == "Court 2"){
-        court2.time.splice(court2.time.indexOf(time), 1);
+        for(let i = 0; i < court2Days.length; i++){
+            if(dayNumber[2] == court2Days[i].date){
+                court2Days[i].time.splice(court2Days[i].time.indexOf(time), 1);
+            }
+        }
     }
     //Bana 3
     else if(Court == "Court 3"){
-        court3.time.splice(court3.time.indexOf(time), 1);
+        for(let i = 0; i < court3Days.length; i++){
+            if(dayNumber[2] == court3Days[i].date){
+                court3Days[i].time.splice(court3Days[i].time.indexOf(time), 1);
+            }
+        }
     }
     //Bana 4
     else if(Court == "Court 4"){
-        court4.time.splice(court4.time.indexOf(time), 1);
+        for(let i = 0; i < court4Days.length; i++){
+            if(dayNumber[2] == court4Days[i].date){
+                court4Days[i].time.splice(court4Days[i].time.indexOf(time), 1);
+            }
+        }
     }
     //Bana 5
     else if(Court == "Court 5"){
-        court5.time.splice(court5.time.indexOf(time), 1);
+        for(let i = 0; i < court5Days.length; i++){
+            if(dayNumber[2] == court5Days[i].date){
+                court5Days[i].time.splice(court5Days[i].time.indexOf(time), 1);
+            }
+        }
     }
 
     //Sparar bokningen i en array
@@ -490,27 +559,36 @@ function loadBookings(){
             //Hämtar tid och bana från nya bokningen 
             let timeRef = bookings[i].Time;
             let courtRef = bookings[i].Number;
+            let dateRef = bookings[i].Date.split("-");
+
+            console.log(dateRef);
 
             //Kollar vilkne bana som bokningen gäller och lägger till den i dess vektor
             //Bana 1
             if(courtRef == "Court 1"){
-                court1.time.push(timeRef);
+            
+            for(let i = 0; i < court1Days.length; i++)
+                if(court1Days[i].date == dateRef[2]){
+                    court1Days[i].time.push(timeRef);
+
+                }
             }
             //Bana 2
             else if(courtRef == "Court 2"){
-                court2.time.push(timeRef);
+                court2Days.time.push(timeRef);
             }
             //Bana 3
             else if(courtRef == "Court 3"){
-                court3.time.push(timeRef);
+                console.log(court3Days);
+                court3Days[bookings[i].date].time.push(timeRef);
             }
             //Bana 4
             else if(courtRef == "Court 4"){
-                court4.time.push(timeRef);
+                court4Days.time.push(timeRef);
             }
             //Bana 5
             else if(courtRef == "Court 5"){
-                court5.time.push(timeRef);
+                court5Days.time.push(timeRef);
             }
  
             //Tar bort bokningen från listan med aktiva bokningar ifall man behöver avbryta sin tid
@@ -526,10 +604,6 @@ function loadBookings(){
         })
 
         let date = new Date();
-
-        if(bookings.date == date.getDate()){
-            console.log("yey");
-        }
 
         //Lägger till knappen i den vänstra divn
         bookingsBodyRightRef.appendChild(btnRemoveRef);
@@ -554,12 +628,16 @@ function controleTime(button, dateRef, selectRef, inputRef, modalHeaderRef, labe
 
     //kollar om användaren har bytt datum
     dateChangeRef.addEventListener("change", () => {
+
+        console.log("change");
         
         //Kollar så att sissta värdet matchar med någon dag i banans atribut med objekt för dagar
         let changeDate = dateChangeRef.value;
-        let changeDateDay = changeDate.split("-")[2];
-    
+        let splitDate = changeDate.split("-");
+
         formSelectRef.innerHTML = "";
+
+        let courtNumber = oGlobalObject.clickedCourt.getAttribute("data-court-number");
 
         //Påbörjar våran select option 
         let optionRef = document.createElement("option");
@@ -568,24 +646,162 @@ function controleTime(button, dateRef, selectRef, inputRef, modalHeaderRef, labe
         optionRef.innerHTML = "Select time";
         formSelectRef.appendChild(optionRef);
 
-        //Lopar igenom och skrive ut alla tider som är lediga för det datum som väljs
-        for(let i = 0; i < court1.days.length; i++){
-            if(changeDateDay == court1.days[i].date){
+        //Parsar tiderna från objektet
+        let objHour = parseInt(oGlobalObject.hour);
+        let objMin = parseInt(oGlobalObject.min);
 
-                court1.days[i].time.forEach((time) => {
-                    
-                    if(time != undefined){
-                        let optionRef = document.createElement("option");
-                        optionRef.innerHTML = time; 
-                        formSelectRef.appendChild(optionRef);
+        selectRef.innerHTML = "";
 
-                    }  
-                })
+        //Bana 1
+        if(courtNumber == 1){
+
+            //Går igenom alla tiderna
+            for(let i = 0; i < court1Days.length; i++){
+
+                if(splitDate[2] == court1Days[i].date){
+                    for(let j = 0; j < court1Days[i].time.length; j ++){
+                        //Splittar tiderna som finns i vektorn på :
+                        let splitTimer = "";
+                        if(court1Days[i].time[j] != undefined){
+                            splitTimer = court1Days[i].time[j].split(":");
+                        }
+                        let timeHoure = parseInt(splitTimer[0]);
+                        let timeMin = parseInt(splitTimer[1]);
+
+                        //Kollar om tiden ska gå att boka
+                        /*if(court1Days[i].time[j] != undefined && (timeHoure > objHour || (timeHoure === objHour && timeMin >= objMin))){
+                            console.log(i);
+                            let optionRef = document.createElement("option");
+                            optionRef.setAttribute("value", court1Days[i].time[j]);
+                            optionRef.innerHTML = court1Days[i].time[j];
+                            selectRef.appendChild(optionRef);
+                        }*/
+                         if(court1Days[i].time[j] != undefined){
+                            console.log(2);
+                            let optionRef = document.createElement("option");
+                            optionRef.setAttribute("value", court1Days[i].time[j]);
+                            optionRef.innerHTML = court1Days[i].time[j];
+                            selectRef.appendChild(optionRef);
+                        }
+                    }
+                }
             }
-        } 
+        }
+        //Bana 2
+        else if(courtNumber == 2){
+            for(let i = 0; i < court2Days.length; i){
+                if(splitDate[2] == court2Days[i].date){
+
+                    for(let j = 0; j < court2Days[i].time.length; j ++){
+                        //Splittar tiderna som finns i vektorn på :
+                        let splitTimer = court2Days[i].time[j].split(":");
+                        let timeHoure = parseInt(splitTimer[0]);
+                        let timeMin = parseInt(splitTimer[1]);
+
+                        //Kollar om tiden ska gå att boka
+                        if(court2Days[i].time[j] != undefined && (timeHoure > objHour || (timeHoure === objHour && timeMin >= objMin))){
+                            let optionRef = document.createElement("option");
+                            optionRef.setAttribute("value", court2Days[i].time[j]);
+                            optionRef.innerHTML = court2Days[i].time[j];
+                            selectRef.appendChild(optionRef);
+                        } 
+                        else{
+                            let optionRef = document.createElement("option");
+                            optionRef.setAttribute("value", court2Days[i].time[j]);
+                            optionRef.innerHTML = court2Days[i].time[j];
+                            selectRef.appendChild(optionRef);
+                        }
+                    }
+                }
+            }
+        }
+        //Bana 3
+        else if(courtNumber == 3){
+            for(let i = 0; i < court3Days.length; i){
+                if(splitDate[2] == court3Days[i].date){
+
+                    for(let j = 0; j < court3Days[i].time.length; j ++){
+                        //Splittar tiderna som finns i vektorn på :
+                        let splitTimer = court3Days[i].time[j].split(":");
+                        let timeHoure = parseInt(splitTimer[0]);
+                        let timeMin = parseInt(splitTimer[1]);
+
+                        //Kollar om tiden ska gå att boka
+                        if(court3Days[i].time[j] != undefined && (timeHoure > objHour || (timeHoure === objHour && timeMin >= objMin))){
+                            let optionRef = document.createElement("option");
+                            optionRef.setAttribute("value", court3Days[i].time[j]);
+                            optionRef.innerHTML = court3Days[i].time[j];
+                            selectRef.appendChild(optionRef);
+                        } 
+                        else{
+                            let optionRef = document.createElement("option");
+                            optionRef.setAttribute("value", court3Days[i].time[j]);
+                            optionRef.innerHTML = court3Days[i].time[j];
+                            selectRef.appendChild(optionRef);
+                        }
+                    }
+                }
+            }
+        }
+        //Bana 4
+        else if(courtNumber == 4){
+            for(let i = 0; i < court4Days.length; i){
+                if(splitDate[2] == court4Days[i].date){
+
+                    for(let j = 0; j < court4Days[i].time.length; j ++){
+                        //Splittar tiderna som finns i vektorn på :
+                        let splitTimer = court4Days[i].time[j].split(":");
+                        let timeHoure = parseInt(splitTimer[0]);
+                        let timeMin = parseInt(splitTimer[1]);
+
+                        //Kollar om tiden ska gå att boka
+                        if(court4Days[i].time[j] != undefined && (timeHoure > objHour || (timeHoure === objHour && timeMin >= objMin))){
+                            let optionRef = document.createElement("option");
+                            optionRef.setAttribute("value", court4Days[i].time[j]);
+                            optionRef.innerHTML = court4Days[i].time[j];
+                            selectRef.appendChild(optionRef);
+                        } 
+                        else{
+                            let optionRef = document.createElement("option");
+                            optionRef.setAttribute("value", court4Days[i].time[j]);
+                            optionRef.innerHTML = court4Days[i].time[j];
+                            selectRef.appendChild(optionRef);
+                        }
+                    }
+                }
+            }
+        }
+        //Bana 5
+        else if(courtNumber == 5){
+            for(let i = 0; i < court1Days.length; i){
+                if(splitDate[2] == court5Days[i].date){
+
+                    for(let j = 0; j < court5Days[i].time.length; j ++){
+                        //Splittar tiderna som finns i vektorn på :
+                        let splitTimer = court1Days[i].time[j].split(":");
+                        let timeHoure = parseInt(splitTimer[0]);
+                        let timeMin = parseInt(splitTimer[1]);
+
+                        //Kollar om tiden ska gå att boka
+                        if(court5Days[i].time[j] != undefined && (timeHoure > objHour || (timeHoure === objHour && timeMin >= objMin))){
+                            let optionRef = document.createElement("option");
+                            optionRef.setAttribute("value", court5Days[i].time[j]);
+                            optionRef.innerHTML = court1Days[i].time[j];
+                            selectRef.appendChild(optionRef);
+                        } 
+                        else{
+                            let optionRef = document.createElement("option");
+                            optionRef.setAttribute("value", court5Days[i].time[j]);
+                            optionRef.innerHTML = court1Days[i].time[j];
+                            selectRef.appendChild(optionRef);
+                        }
+                    }
+                }
+            }
+        }
     });
 
-    //Boolean för inloggnigsprocessen
+    //Boolean för bookningsprocessen
     let bookingProgress = true;
 
     //Knappen som genomför en bokning
@@ -641,6 +857,5 @@ function searchResault(searchInput){
 
     })
 }
-
 
 //#endregion
