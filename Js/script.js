@@ -674,8 +674,6 @@ function controleTime(button, dateRef, selectRef, inputRef, modalHeaderRef, labe
             courtNumber = oGlobalObjectCourt.clickedCourt;
         }
 
-        console.log("Clicked " + courtNumber);
-
         time(courtNumber, selectRef, splitDate);
     });  
 
@@ -708,12 +706,12 @@ function controleTime(button, dateRef, selectRef, inputRef, modalHeaderRef, labe
             //Sätter kontrollen till False så det inte skapas två objekt
             bookingProgress = false;
 
-            if(modalHeaderRef.innerHTML == "Booking"){
+            //Kollar om användaren valt bana genom att klicka på en bana eller att välja i select/ option 
+            if(modalHeaderRef == "Select court"){
                 confirmBooking(bookings.length + 1, "Court " + oGlobalObjectCourt.clickedCourt, dateRef.value,  selectRef.value, inputRef.value);
             }
-            else{
-                console.log("Hej");
-                confirmBooking(bookings.length + 1, modalHeaderRef, dateRef.value,  selectRef.value, inputRef.value);
+            else if(modalHeaderRef != "Booking"){
+                confirmBooking(bookings.length + 1, modalHeaderRef.innerHTML, dateRef.value,  selectRef.value, inputRef.value);
 
             }
 
