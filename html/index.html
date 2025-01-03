@@ -2,6 +2,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
+        <meta name="theme-color" content="#0d6efd"/> <!--Ändrar fägren på utrymmet ovanför navbar på exempelvis en Iphone-->
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <title>Tennis booking</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -10,11 +11,14 @@
     <body>
         <nav class="navbar navbar-expand-md bg-primary">
             <div class="container-fluid">
+                <!-- Toggler -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                <div class="collapse navbar-collapse d-flex justify-content-center" id="navbarSupportedContent">
-                    <ul class="navbar-nav mb-2 mb-lg-0 ">
+                
+                <!-- Navbar menyn -->
+                <div class="collapse navbar-collapse d-md-flex justify-content-center" id="navbarSupportedContent">
+                    <ul class="navbar-nav mb-2 mb-lg-0">
                         <li class="nav-item">
                             <div type="button" class="btn btn-light m-2" id="booking" data-bs-toggle="modal" data-bs-target="#modalCourt">Booking</div>
                         </li>
@@ -25,14 +29,15 @@
                 </div>
             </div>
         </nav>
+        
         <div class="col d-flex justify-content-center">
-            <h1>Tennis Court Booking</h1>
+            <h1 class="mt-2">Tennis Court Booking</h1>
         </div>
         <div class="container">
 
             <div class="row d-flex">
                 <!-- #region vänstra kolumnen --> 
-                <div class="col-6">
+                <div class="col-md-6 col-12">
                     <div class="col-12 d-flex" >
                         <input type="search" name="search" id="search" class="form-control bg-light" placeholder="Search">
                         <div class="btn btn-primary ms-1">Filter</div>
@@ -114,8 +119,6 @@
        <!--#endgregion-->
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
         <script src="../Js/script.js"></script>
     </body>
 </html>

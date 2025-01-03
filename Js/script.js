@@ -46,7 +46,7 @@ class day{
 
 class booking{
 
-    constructor(bkNumber,number, date, time, name){
+    constructor(bkNumber, number, date, time, name){
         this.bkNumber = bkNumber,
         this.Number = number,
         this.Date = date,
@@ -308,6 +308,7 @@ function createModalBoydy(img){
     let selectCourtRef = document.createElement("select");
 
     let courtNumber = "";
+    let selectCourtRefValue = "";
     if(img != null){
         courtNumber = img.getAttribute("data-court-number");
         modalHeaderRef.innerHTML = "Court " + courtNumber;
@@ -340,11 +341,14 @@ function createModalBoydy(img){
         selectCourtRef.addEventListener("change", () => {
             console.log(selectCourtRef.value);
             courtNumber = selectCourtRef.value;
-
+    
             oGlobalObjectCourt.clickedCourt = courtNumber;
             selectRef.innerHTML = "";
+            console.log("Clicked " + oGlobalObjectCourt.clickedCourt)
             time(courtNumber, selectRef, splitDate);
-        })
+        }) 
+
+        selectCourtRefValue = selectCourtRef.value;
     }
 
     let dateRef = document.createElement("input");
@@ -393,12 +397,10 @@ function createModalBoydy(img){
         court3Days[i].time.sort();
         court4Days[i].time.sort();
         court5Days[i].time.sort();
-
     }
 
     let splitDate = dateRef.value.split("-");
     console.log(courtNumber);
-    time(courtNumber, selectRef, splitDate);
 
     formRef.appendChild(selectRef);
 
@@ -431,12 +433,14 @@ function createModalBoydy(img){
     confirmButtonRef.innerHTML = "Book";
     modalFooterRef.appendChild(confirmButtonRef);
 
+    time(courtNumber, selectRef, splitDate);
+
     if(modalHeaderRef.innerHTML !== "Booking"){
         controleTime(confirmButtonRef, dateRef, selectRef, inputRef, modalHeaderRef, labelSelectRef, labelNameRef);
     }
     else{
-        controleTime(confirmButtonRef, dateRef, selectRef, inputRef, selectCourtRef, labelSelectRef, labelNameRef);
-    }
+        controleTime(confirmButtonRef, dateRef, selectRef, inputRef, selectCourtRefValue, labelSelectRef, labelNameRef);
+    }  
 }
 
 //#endregion
@@ -662,8 +666,15 @@ function controleTime(button, dateRef, selectRef, inputRef, modalHeaderRef, labe
         optionRef.innerHTML = "Select time";
         formSelectRef.appendChild(optionRef);
 
-        let courtNumber  = oGlobalObjectCourt.clickedCourt.getAttribute("data-court-number");
-        
+        let courtNumber  = "";
+        if(oGlobalObjectCourt.clickedCourt instanceof HTMLElement){
+            courtNumber  = oGlobalObjectCourt.clickedCourt.getAttribute("data-court-number");
+        }
+        else{
+            courtNumber = oGlobalObjectCourt.clickedCourt;
+        }
+
+        console.log("Clicked " + courtNumber);
 
         time(courtNumber, selectRef, splitDate);
     });  
@@ -697,7 +708,14 @@ function controleTime(button, dateRef, selectRef, inputRef, modalHeaderRef, labe
             //Sätter kontrollen till False så det inte skapas två objekt
             bookingProgress = false;
 
-            confirmBooking(bookings.length + 1, modalHeaderRef.innerHTML, dateRef.value,  selectRef.value, inputRef.value);
+            if(modalHeaderRef.innerHTML == "Booking"){
+                confirmBooking(bookings.length + 1, "Court " + oGlobalObjectCourt.clickedCourt, dateRef.value,  selectRef.value, inputRef.value);
+            }
+            else{
+                console.log("Hej");
+                confirmBooking(bookings.length + 1, modalHeaderRef, dateRef.value,  selectRef.value, inputRef.value);
+
+            }
 
             button.setAttribute("data-bs-dismiss", "modal");
             button.click();
@@ -827,7 +845,6 @@ function time(courtNumber, selectRef, splitDate){
             }
         }
     }
-
 }
 
 //#endregion
