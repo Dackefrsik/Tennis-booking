@@ -96,7 +96,7 @@ window.addEventListener("load", () => {
     window.oGlobalObject = {
         timer : null,
         hour : new Date().getHours(),
-        min : new Date().getHours(),
+        min : new Date().getMinutes(),
         second : new Date().getSeconds()
     }
     
@@ -218,7 +218,55 @@ window.addEventListener("load", () => {
 
         searchResault(searchRef.value);
 
-    })
+    });
+
+    let activeBtnRef = document.querySelector("#active");
+
+    activeBtnRef.addEventListener("click", () => {
+        let activeRef = document.querySelector(".active");
+        activeRef.innerHTML = "";
+        const newDate = new Date(days);
+
+        bookings.forEach(booking => {
+            let hour = booking.Time.split(":");
+
+            if(hour[0] == newDate.getHours()){
+                //skapar upp en div som visar bokningen
+                let bookingBodyRef = document.createElement("div");
+                bookingBodyRef.classList.add("mb-2","ps-3", "pt-2", "pe-3", "border", "rounded", "d-flex", "flex-column");
+                bookingBodyRef.setAttribute("booking-number", booking.bkNumber);
+
+                //Skapar en h3:a för att visa vilken bana bokningen är gjord på
+                let h3Ref = document.createElement("h3");
+                h3Ref.innerHTML = booking.Number;
+                bookingBodyRef.appendChild(h3Ref);
+
+                //Skapar en h5:a för att visa vilken tid bokningen avse
+                /*let timeRef = document.createElement("h5");
+                timeRef.innerHTML = "Time: " + booking.Time;
+                bookingBodyRef.appendChild(timeRef);*/
+
+                //Skapar en h6:a för datum
+                /*let dateRef = document.createElement("h6");
+                dateRef.innerHTML = "Date: " + booking.Date;
+                bookingBodyRef.appendChild(dateRef);*/
+
+                //Skriver ut ett namn så att vi vet vem som gjort bokningen
+                let nameRef = document.createElement("p");
+                nameRef.innerHTML = "Name: " + booking.Name;
+                bookingBodyRef.appendChild(nameRef);
+
+                activeRef.appendChild(bookingBodyRef);
+            }
+            
+        });
+
+    });
+
+    let bookingButtonRef = document.querySelector("#booking");
+    bookingButtonRef.addEventListener("click", () => {
+        createModalBoydy();
+    });
 
 });
 //#endregion
@@ -252,14 +300,52 @@ function createModalBoydy(img){
     //Hämtar ut headern och skriver ut vilken bana som man kollar tider för
     let modalHeaderRef = document.querySelector(".modal-title");
     modalHeaderRef.innerHTML = "";
-    let courtNumber = img.getAttribute("data-court-number");
-    modalHeaderRef.innerHTML = "Court " + courtNumber;
-
     //Hämtar ut kroppen så det kan byggas upp lite innehåll
     let modalBodyRef = document.querySelector(".modal-body");
     modalBodyRef.innerHTML = "";
     let formRef = document.createElement("form");
     formRef.classList.add("form-group");
+    let selectCourtRef = document.createElement("select");
+
+    let courtNumber = "";
+    if(img != null){
+        courtNumber = img.getAttribute("data-court-number");
+        modalHeaderRef.innerHTML = "Court " + courtNumber;
+    }
+    else{
+        let lableRef = document.createElement("lable");
+        lableRef.innerHTML = "*";
+        lableRef.classList.add("text-danger");
+
+        formRef.appendChild(lableRef);
+
+        modalHeaderRef.innerHTML = "Booking";
+        selectCourtRef.classList.add("form-control", "mb-1")
+
+        let optionRef = document.createElement("option");
+        optionRef.innerHTML = "Select court";
+        optionRef.setAttribute("selected", true);
+        optionRef.setAttribute("disabled", true);
+        selectCourtRef.appendChild(optionRef);
+
+        for(let i = 0; i < 5; i++){
+            let optionRef = document.createElement("option");
+            optionRef.setAttribute("value", (i + 1));
+            optionRef.innerHTML = "Court " + (i + 1);
+            selectCourtRef.appendChild(optionRef);
+        }
+
+        formRef.appendChild(selectCourtRef);
+
+        selectCourtRef.addEventListener("change", () => {
+            console.log(selectCourtRef.value);
+            courtNumber = selectCourtRef.value;
+
+            oGlobalObjectCourt.clickedCourt = courtNumber;
+            selectRef.innerHTML = "";
+            time(courtNumber, selectRef, splitDate);
+        })
+    }
 
     let dateRef = document.createElement("input");
     dateRef.setAttribute("type", "date");
@@ -311,7 +397,7 @@ function createModalBoydy(img){
     }
 
     let splitDate = dateRef.value.split("-");
-
+    console.log(courtNumber);
     time(courtNumber, selectRef, splitDate);
 
     formRef.appendChild(selectRef);
@@ -345,7 +431,12 @@ function createModalBoydy(img){
     confirmButtonRef.innerHTML = "Book";
     modalFooterRef.appendChild(confirmButtonRef);
 
-    controleTime(confirmButtonRef, dateRef, selectRef, inputRef, modalHeaderRef, labelSelectRef, labelNameRef);
+    if(modalHeaderRef.innerHTML !== "Booking"){
+        controleTime(confirmButtonRef, dateRef, selectRef, inputRef, modalHeaderRef, labelSelectRef, labelNameRef);
+    }
+    else{
+        controleTime(confirmButtonRef, dateRef, selectRef, inputRef, selectCourtRef, labelSelectRef, labelNameRef);
+    }
 }
 
 //#endregion
@@ -409,47 +500,6 @@ function confirmBooking(bkNumber, Court, date, time, name ){
     console.log(bookings);
 
     loadBookings();
-
-    //Går igenom alla boknnigar
-    //För aktiva bokningar, kanske ska tas bort och flyttas
-    bookings.forEach(booking => {
-        if(oGlobalObject.hour + ":00" == booking.Time){
-            let h5Ref = document.createElement("h5");
-            h5Ref.classList.add("pt-1", "ms-3")
-            h5Ref.innerHTML = booking.Name
-
-            if(booking.Number == "Court 1"){
-                let activeDivRef = document.querySelector(".Play1");
-                if(activeDivRef.children.length < 2){
-                    activeDivRef.appendChild(h5Ref);
-                }
-            }
-            else if(booking.Number == "Court 2"){
-                let activeDivRef = document.querySelector(".Play2");
-                if(activeDivRef.children.length < 2){
-                    activeDivRef.appendChild(h5Ref);
-                }
-            }
-            else if(booking.Number == "Court 3"){
-                let activeDivRef = document.querySelector(".Play3");
-                if(activeDivRef.children.length < 2){
-                    activeDivRef.appendChild(h5Ref);
-                }
-            }
-            else if(booking.Number == "Court 4"){
-                let activeDivRef = document.querySelector(".Play4");
-                if(activeDivRef.children.length < 2){
-                    activeDivRef.appendChild(h5Ref);
-                }
-            }
-            else if(booking.Number == "Court 5"){
-                let activeDivRef = document.querySelector(".Play5");
-                if(activeDivRef.children.length < 2){
-                    activeDivRef.appendChild(h5Ref);
-                }
-            }
-        }
-    });
 }
 
 //#endregion
@@ -463,8 +513,8 @@ function loadBookings(){
     let bookingsDivRef = document.querySelector("#bookings");
     bookingsDivRef.innerHTML = "";
 
-    let playDivs = document.querySelectorAll("[class^='Play']");
-
+    //let playDivs = document.querySelectorAll("[class^='Play']");
+ 
     //Loopar igenom alla bokningar
     for(let i = 0; i < bookings.length; i++){
         
@@ -562,11 +612,7 @@ function loadBookings(){
                 }
             }
  
-            //Tar bort bokningen från listan med aktiva bokningar ifall man behöver avbryta sin tid
-            if(playDivs[i].lastChild.innerHTML == bookings[i].Name && bookings[i].Time == oGlobalObject.hour + ":00"){
-                playDivs[i].removeChild(playDivs[i].lastChild);
-            }
-            
+            //Tar bort bokningen från listan med aktiva bokningar ifall man behöver avbryta sin tid            
 
             //Tar bort bokning ifrån vetorn med bokningar
             let removeValue = btnRemoveRef.getAttribute("data-booking-index");
@@ -616,7 +662,8 @@ function controleTime(button, dateRef, selectRef, inputRef, modalHeaderRef, labe
         optionRef.innerHTML = "Select time";
         formSelectRef.appendChild(optionRef);
 
-        let courtNumber = oGlobalObjectCourt.clickedCourt.getAttribute("data-court-number");
+        let courtNumber  = oGlobalObjectCourt.clickedCourt.getAttribute("data-court-number");
+        
 
         time(courtNumber, selectRef, splitDate);
     });  
