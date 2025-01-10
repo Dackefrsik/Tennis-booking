@@ -5,16 +5,23 @@
     --Orange: #FF9800;
     --White: #FFFFFF;
     --Light-Gray: #E0E0E0;
-
 }
 
 body{
     overflow-x: hidden;
+    margin: 0px;
+    padding: 0px;
 }
 
 /* Bakgrundfägr för navbar */
 nav{
     background-color: var(--Light-Green);
+}
+
+.navTitle{
+    background-color: var(--Green);
+    color: var(--White);
+    margin: 0px;
 }
 
 /* Färg för filterknappen */
@@ -27,6 +34,7 @@ nav{
 .navButtons{
     background-color: var(--Green);
     color: var(--White);
+    font-size: 1.25rem;
 }
 
 /* Färger för header i modal */

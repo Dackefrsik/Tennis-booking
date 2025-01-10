@@ -555,7 +555,7 @@ function loadBookings(){
 
         //Skapar en knapp som tar bort bokningen 
         let btnRemoveRef = document.createElement("button");
-        btnRemoveRef.classList.add("btn", "bg-danger", "text-white");
+        btnRemoveRef.classList.add("btn", "close", "text-white");
         btnRemoveRef.setAttribute("type", "button");
         btnRemoveRef.setAttribute("data-bocking-index", bookings.indexOf(bookings[i]));
         btnRemoveRef.innerHTML = "Boka av";
