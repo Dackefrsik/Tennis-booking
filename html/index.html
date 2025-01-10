@@ -9,7 +9,7 @@
         <link rel="stylesheet" href="../style/style.css">
     </head>
     <body>
-        <nav class="navbar navbar-expand-md bg-primary">
+        <nav class="navbar navbar-expand-md">
             <div class="container-fluid">
                 <!-- Toggler -->
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -20,10 +20,10 @@
                 <div class="collapse navbar-collapse d-md-flex justify-content-center" id="navbarSupportedContent">
                     <ul class="navbar-nav mb-2 mb-lg-0">
                         <li class="nav-item">
-                            <div type="button" class="btn btn-light m-2" id="booking" data-bs-toggle="modal" data-bs-target="#modalCourt">Booking</div>
+                            <div type="button" class="p-2 rounded-2 navButtons m-2" id="booking" data-bs-toggle="modal" data-bs-target="#modalCourt">Booking</div>
                         </li>
                         <li class="nav-item">
-                            <div type="button" class="btn btn-success m-2" id="active" data-bs-toggle="modal" data-bs-target="#modalActive">Active bookings</div>
+                            <div type="button" class="p-2 rounded-2 navButtons m-2" id="active" data-bs-toggle="modal" data-bs-target="#modalActive">Active bookings</div>
                         </li>
                     </ul>
                 </div>
@@ -40,7 +40,7 @@
                 <div class="col-md-6 col-12">
                     <div class="col-12 d-flex" >
                         <input type="search" name="search" id="search" class="form-control bg-light" placeholder="Search">
-                        <div class="btn btn-primary ms-1">Filter</div>
+                        <div class="btn ms-1" id="filterButton">Filter</div>
                     </div>
                     <div class="col-12 mt-2" id="bookings">
                         
@@ -80,7 +80,7 @@
         <div class="modal" id="modalCourt" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header bg-primary">
+                    <div class="modal-header modalHeaderColor">
                         
                         <h5 class="modal-title text-white"></h5>
                     </div>
@@ -88,7 +88,7 @@
                         
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-danger " data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn closeButton " data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>
@@ -100,7 +100,7 @@
        <div class="modal" id="modalActive" tabindex="-1">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-heade bg-primary">
+                    <div class="modal-heade modalHeaderColor">
                         <h5 class="modal-title text-white m-3">Active Bookings</h5>
                     </div>
                     <div class="modal-body">
@@ -110,7 +110,7 @@
                         
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-danger " data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn closeButton " data-bs-dismiss="modal">Close</button>
                     </div>
                 </div>
             </div>

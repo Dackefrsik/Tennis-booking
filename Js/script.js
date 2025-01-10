@@ -309,19 +309,20 @@ function createModalBoydy(img){
 
     let courtNumber = "";
     let selectCourtRefValue = "";
+    let lableRef = document.createElement("lable");
+
     if(img != null){
         courtNumber = img.getAttribute("data-court-number");
         modalHeaderRef.innerHTML = "Court " + courtNumber;
     }
     else{
-        let lableRef = document.createElement("lable");
         lableRef.innerHTML = "*";
         lableRef.classList.add("text-danger");
 
         formRef.appendChild(lableRef);
 
         modalHeaderRef.innerHTML = "Booking";
-        selectCourtRef.classList.add("form-control", "mb-1")
+        selectCourtRef.classList.add("form-control", "mb-1", "errorCourt")
 
         let optionRef = document.createElement("option");
         optionRef.innerHTML = "Select court";
@@ -428,7 +429,7 @@ function createModalBoydy(img){
 
     //Skapar en knapp som genomför bokningar
     let confirmButtonRef = document.createElement("button");
-    confirmButtonRef.classList.add("btn", "btn-success");
+    confirmButtonRef.classList.add("btn", "bookButton");
     confirmButtonRef.setAttribute("type", "button");
     confirmButtonRef.innerHTML = "Book";
     modalFooterRef.appendChild(confirmButtonRef);
@@ -439,7 +440,7 @@ function createModalBoydy(img){
         controleTime(confirmButtonRef, dateRef, selectRef, inputRef, modalHeaderRef, labelSelectRef, labelNameRef);
     }
     else{
-        controleTime(confirmButtonRef, dateRef, selectRef, inputRef, selectCourtRefValue, labelSelectRef, labelNameRef);
+        controleTime(confirmButtonRef, dateRef, selectRef, inputRef, selectCourtRefValue, labelSelectRef, labelNameRef, lableRef);
     }  
 }
 
@@ -642,7 +643,7 @@ function loadBookings(){
 
 //#region funktionallitet till modal
 
-function controleTime(button, dateRef, selectRef, inputRef, modalHeaderRef, labelSelectRef, labelNameRef){
+function controleTime(button, dateRef, selectRef, inputRef, modalHeaderRef, labelSelectRef, labelNameRef, lableRef){
 
     let dateChangeRef = document.querySelector("[type='date']");
     let formSelectRef = document.querySelector(".form-select");
@@ -690,8 +691,18 @@ function controleTime(button, dateRef, selectRef, inputRef, modalHeaderRef, labe
             labelSelectRef.innerHTML = "*";
         }
 
+        //Ta bort felmedelandet för court 
+        let selectCourtRef = document.querySelector(".errorCourt");
+        if(selectCourtRef.value != "Select court"){
+            lableRef.innerHTML = "*";
+        }
+
+        //Felmedelande för court
+        if(selectCourtRef.value == "Select court"){
+            lableRef.innerHTML = "* Select court!";
+        }
         //Felmedelande för time
-        if(selectRef.value == "Select time"){
+        else if(selectRef.value == "Select time"){
            
             labelSelectRef.innerHTML = "* Select time!";
             labelSelectRef.classList.add("time");

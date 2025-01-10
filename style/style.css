@@ -1,8 +1,57 @@
-/* img{
-    height: 200px;
-    width: 100px;
-} */
+/* Variabler ör färger */
+:root{
+    --Green: #4CAF50;
+    --Light-Green: #A5D6A7;
+    --Orange: #FF9800;
+    --White: #FFFFFF;
+    --Light-Gray: #E0E0E0;
+
+}
 
 body{
     overflow-x: hidden;
+}
+
+/* Bakgrundfägr för navbar */
+nav{
+    background-color: var(--Light-Green);
+}
+
+/* Färg för filterknappen */
+#filterButton{
+    background-color: var(--Green);
+    color: var(--White);
+}
+
+/* Färg för knappar i navbar */
+.navButtons{
+    background-color: var(--Green);
+    color: var(--White);
+}
+
+/* Färger för header i modal */
+.modalHeaderColor{
+    background-color: var(--Light-Green);
+}
+
+/* Färger för kanppen som stänger ner en modal */
+.closeButton{
+    border-color: var(--Orange);
+    color: var(--Orange);
+}
+
+.closeButton:hover{
+    background-color: var(--Orange);
+    color: var(--White);
+}
+
+/* Färger för bokningsknappen */
+.bookButton{
+    background-color: var(--Green);
+    color: var(--White);
+}
+
+.bookButton:hover{
+    background-color: var(--Green);
+    color: var(--White);
 }
