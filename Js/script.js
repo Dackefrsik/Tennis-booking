@@ -505,6 +505,38 @@ function confirmBooking(bkNumber, Court, date, time, name ){
     console.log(bookings);
 
     loadBookings();
+    
+    const getData = () =>{
+
+        console.log("data");
+    
+        return bookings.map(booking => {
+            return[
+                {
+                    bkID : booking.bkNumber, 
+                    court : booking.Number, 
+                    date: booking.Date, 
+                    time : booking.Time, 
+                    name : booking.Name
+                }
+            ]
+        })
+        
+    }
+    
+    sendData();
+    /* function sendData(){
+        fetch("http://localhost:3000/bookings", {
+            methode: "POST",
+            headers:{
+                "Content-Type" : "application/json"
+            },
+            body: JSON.stringify(getData) 
+        })
+        .then(response => response.json())
+        .then(data => console.log("Booking successfully added:", data))
+        .catch(error => console.log("Error:", error));
+    } */
 }
 
 //#endregion
@@ -693,12 +725,12 @@ function controleTime(button, dateRef, selectRef, inputRef, modalHeaderRef, labe
 
         //Ta bort felmedelandet för court 
         let selectCourtRef = document.querySelector(".errorCourt");
-        if(selectCourtRef.value != "Select court"){
+        if(selectCourtRef != null &&selectCourtRef.value != "Select court"){
             lableRef.innerHTML = "*";
         }
 
         //Felmedelande för court
-        if(selectCourtRef.value == "Select court"){
+        if(selectCourtRef != null && selectCourtRef.value == "Select court"){
             lableRef.innerHTML = "* Select court!";
         }
         //Felmedelande för time
@@ -854,6 +886,63 @@ function time(courtNumber, selectRef, splitDate){
             }
         }
     }
+}
+
+//#endregion
+
+//#region funktion som returnerar data
+
+const getData = () =>{
+
+    console.log("data");
+
+    return bookings.map(booking => {
+        return[
+            {
+                bkID : booking.bkNumber, 
+                court : booking.Number, 
+                date: booking.Date, 
+                time : booking.Time, 
+                name : booking.Name
+            }
+        ]
+    })
+    
+}
+
+
+function sendData(){
+
+    console.log("send");
+
+
+    const data = getData();
+
+    console.log("Sending data to server: ", data);
+
+    // Kontrollera om data är korrekt format
+    if (data && Array.isArray(data)) {
+        console.log("Data is an array, ready to send");
+    } else {
+        console.error("Data is not an array or is undefined");
+    }
+
+    fetch("http://localhost:3000/bookings", {
+        method: "POST",
+        headers:{
+            "Content-Type" : "application/json"
+        },
+        body: JSON.stringify(data) 
+    })
+    .then(response => {
+         // Om servern svarar korrekt
+         if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        return response.json();  // Omvandla svaret till JSON
+    })
+    .then(data => console.log("Booking successfully added:", data))
+    .catch(error => console.log("Error:", error));
 }
 
 //#endregion
