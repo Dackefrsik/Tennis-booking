@@ -268,6 +268,29 @@ window.addEventListener("load", () => {
         createModalBoydy();
     });
 
+    /* const curentBookings = getBookings();
+    console.log(curentBookings);
+
+    curentBookings.forEach(booking => {
+        confirmBooking(booking.bkID, booking.court, booking.date, booking.time, booking.namne);
+        }
+    ) */
+    console.log("Funktion ", getBookings());
+    getBookings().then(currentBookings => {
+        console.log("Current bookings:", currentBookings);
+
+        if (Array.isArray(currentBookings)) {
+            currentBookings.forEach(booking => {
+                console.log("Booking details:", booking);
+                // Gör något med varje bokning, exempelvis anropa confirmBooking
+                console.log("datum", booking.Date);
+                confirmBooking(booking.bkID, booking.Court, booking.Date, booking.Time, booking.Name);
+            });
+        } else {
+            console.log("Error: Received data is not in expected format.");
+        }
+    });
+
 });
 //#endregion
 
@@ -505,38 +528,7 @@ function confirmBooking(bkNumber, Court, date, time, name ){
     console.log(bookings);
 
     loadBookings();
-    
-    const getData = () =>{
-
-        console.log("data");
-    
-        return bookings.map(booking => {
-            return[
-                {
-                    bkID : booking.bkNumber, 
-                    court : booking.Number, 
-                    date: booking.Date, 
-                    time : booking.Time, 
-                    name : booking.Name
-                }
-            ]
-        })
-        
-    }
-    
     sendData();
-    /* function sendData(){
-        fetch("http://localhost:3000/bookings", {
-            methode: "POST",
-            headers:{
-                "Content-Type" : "application/json"
-            },
-            body: JSON.stringify(getData) 
-        })
-        .then(response => response.json())
-        .then(data => console.log("Booking successfully added:", data))
-        .catch(error => console.log("Error:", error));
-    } */
 }
 
 //#endregion
@@ -587,7 +579,7 @@ function loadBookings(){
 
         //Skapar en knapp som tar bort bokningen 
         let btnRemoveRef = document.createElement("button");
-        btnRemoveRef.classList.add("btn", "close", "text-white");
+        btnRemoveRef.classList.add("btn", "removeBooking", "text-white");
         btnRemoveRef.setAttribute("type", "button");
         btnRemoveRef.setAttribute("data-bocking-index", bookings.indexOf(bookings[i]));
         btnRemoveRef.innerHTML = "Boka av";
@@ -910,7 +902,6 @@ const getData = () =>{
     
 }
 
-
 function sendData(){
 
     console.log("send");
@@ -943,6 +934,30 @@ function sendData(){
     })
     .then(data => console.log("Booking successfully added:", data))
     .catch(error => console.log("Error:", error));
+}
+
+//#endregion
+
+//#region funktion för att hämta bokningar
+
+function getBookings() {
+    return fetch("http://localhost:3000/getBookings")
+        .then(response => {
+            if(!response.ok) {
+                throw new Error("Network reponse was not ok");
+            }
+
+            console.log("Convert to JSON")
+            return response.json();
+        })
+        .then(data => {
+            console.log("Bookings received: ", data);
+            return data;
+        })
+        .catch(error => {
+            console.error("Error fetching bookings: ", error);
+            return [];
+        });
 }
 
 //#endregion

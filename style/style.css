@@ -63,3 +63,11 @@ nav{
     background-color: var(--Green);
     color: var(--White);
 }
+
+.removeBooking{
+    background-color: var(--Orange);
+}
+
+.removeBooking:hover{
+    background-color: var(--Orange);
+}
