@@ -64,6 +64,7 @@ nav{
     color: var(--White);
 }
 
+/*Färger för knapparna som tar bort bokningar*/
 .removeBooking{
     background-color: var(--Orange);
 }

@@ -884,6 +884,7 @@ function time(courtNumber, selectRef, splitDate){
 
 //#region funktion som returnerar data
 
+//Funktion för att hämta och returnera datan för varje bokning
 const getData = () =>{
 
     console.log("data");
@@ -902,11 +903,12 @@ const getData = () =>{
     
 }
 
+//Funktion för att sicka varje bokning
 function sendData(){
 
     console.log("send");
 
-
+    //Hämtar data för bokningarna 
     const data = getData();
 
     console.log("Sending data to server: ", data);
@@ -918,6 +920,7 @@ function sendData(){
         console.error("Data is not an array or is undefined");
     }
 
+    //Fetchanrop på endpopint bookings
     fetch("http://localhost:3000/bookings", {
         method: "POST",
         headers:{
@@ -940,7 +943,10 @@ function sendData(){
 
 //#region funktion för att hämta bokningar
 
+//Funktion för att hämta alla bokningar
 function getBookings() {
+
+    //Fetchanrop på endpoint getBookings
     return fetch("http://localhost:3000/getBookings")
         .then(response => {
             if(!response.ok) {
