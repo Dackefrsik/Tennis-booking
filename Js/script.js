@@ -241,16 +241,6 @@ window.addEventListener("load", () => {
                 h3Ref.innerHTML = booking.Number;
                 bookingBodyRef.appendChild(h3Ref);
 
-                //Skapar en h5:a för att visa vilken tid bokningen avse
-                /*let timeRef = document.createElement("h5");
-                timeRef.innerHTML = "Time: " + booking.Time;
-                bookingBodyRef.appendChild(timeRef);*/
-
-                //Skapar en h6:a för datum
-                /*let dateRef = document.createElement("h6");
-                dateRef.innerHTML = "Date: " + booking.Date;
-                bookingBodyRef.appendChild(dateRef);*/
-
                 //Skriver ut ett namn så att vi vet vem som gjort bokningen
                 let nameRef = document.createElement("p");
                 nameRef.innerHTML = "Name: " + booking.Name;
@@ -267,29 +257,25 @@ window.addEventListener("load", () => {
     bookingButtonRef.addEventListener("click", () => {
         createModalBoydy();
     });
-
-    /* const curentBookings = getBookings();
-    console.log(curentBookings);
-
-    curentBookings.forEach(booking => {
-        confirmBooking(booking.bkID, booking.court, booking.date, booking.time, booking.namne);
-        }
-    ) */
+    
     console.log("Funktion ", getBookings());
     getBookings().then(currentBookings => {
         console.log("Current bookings:", currentBookings);
 
         if (Array.isArray(currentBookings)) {
             currentBookings.forEach(booking => {
-                console.log("Booking details:", booking);
                 // Gör något med varje bokning, exempelvis anropa confirmBooking
                 console.log("datum", booking.Date);
-                confirmBooking(booking.bkID, booking.Court, booking.Date, booking.Time, booking.Name);
+                console.log("ID", booking.ID);
+                confirmBooking("Load", booking.ID, booking.Court, booking.Date, booking.Time, booking.Name);
+                console.log("Antal bokningar: ", bookings.length);
+
             });
         } else {
             console.log("Error: Received data is not in expected format.");
         }
     });
+
 
 });
 //#endregion
@@ -471,7 +457,7 @@ function createModalBoydy(img){
 
 //#region funktion för att genomföra en bokning
 
-function confirmBooking(bkNumber, Court, date, time, name ){
+function confirmBooking(evt, bkNumber, Court, date, time, name ){
 
     //Lägger en bokning 
     let newBooking = new booking(bkNumber, Court, date, time, name);
@@ -528,7 +514,9 @@ function confirmBooking(bkNumber, Court, date, time, name ){
     console.log(bookings);
 
     loadBookings();
-    sendData();
+    if(evt != "Load"){
+        sendData();
+    }
 }
 
 //#endregion
@@ -645,7 +633,10 @@ function loadBookings(){
 
             //Tar bort bokning ifrån vetorn med bokningar
             let removeValue = btnRemoveRef.getAttribute("data-booking-index");
+            let removeID = bookingBodyRef.getAttribute("booking-number");
             bookings.splice(parseInt(removeValue), 1);
+            console.log("Remove ", removeValue);
+            removeBooking(removeID);
             loadBookings();
         })
 
@@ -743,10 +734,10 @@ function controleTime(button, dateRef, selectRef, inputRef, modalHeaderRef, labe
 
             //Kollar om användaren valt bana genom att klicka på en bana eller att välja i select/ option 
             if(modalHeaderRef == "Select court"){
-                confirmBooking(bookings.length + 1, "Court " + oGlobalObjectCourt.clickedCourt, dateRef.value,  selectRef.value, inputRef.value);
+                confirmBooking("", bookings[bookings.length].bkID + 1, "Court " + oGlobalObjectCourt.clickedCourt, dateRef.value,  selectRef.value, inputRef.value);
             }
             else if(modalHeaderRef != "Booking"){
-                confirmBooking(bookings.length + 1, modalHeaderRef.innerHTML, dateRef.value,  selectRef.value, inputRef.value);
+                confirmBooking("", bookings[bookings.length].bkID + 1, modalHeaderRef.innerHTML, dateRef.value,  selectRef.value, inputRef.value);
 
             }
 
@@ -887,20 +878,20 @@ function time(courtNumber, selectRef, splitDate){
 //Funktion för att hämta och returnera datan för varje bokning
 const getData = () =>{
 
-    console.log("data");
 
-    return bookings.map(booking => {
-        return[
-            {
-                bkID : booking.bkNumber, 
-                court : booking.Number, 
-                date: booking.Date, 
-                time : booking.Time, 
-                name : booking.Name
-            }
-        ]
-    })
-    
+    const latestBooking = bookings[bookings.length -1];
+    console.log("latestBooking", latestBooking);
+
+    console.log("data");
+    return[
+        {
+            bkID : latestBooking.bkNumber, 
+            court : latestBooking.Number, 
+            date: latestBooking.Date, 
+            time : latestBooking.Time, 
+            name : latestBooking.Name
+        }
+    ];    
 }
 
 //Funktion för att sicka varje bokning
@@ -965,5 +956,30 @@ function getBookings() {
             return [];
         });
 }
+
+//#endregion
+
+//#region Funktion för att ta bort en bokning 
+
+function removeBooking(data){
+    console.log("data i data", data);
+    fetch("http://localhost:3000/removeBooking", {
+        method: "POST",
+        headers:{
+            "Content-Type" : "application/json"
+        },
+        body: JSON.stringify({bkID: data})
+    })
+    .then((response => {
+        //Om servern svarar korrekt
+        if(!response.ok){
+            throw new Error("Network response was not ok");
+        }
+        return response.json();
+    }))
+    .then(data => console.log("Booking successfully removed"))
+    .catch(error => console.log("Error:", error));
+}
+
 
 //#endregion
