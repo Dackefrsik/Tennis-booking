@@ -30,6 +30,9 @@
                         <li class="nav-item">
                             <div type="button" class="p-3 rounded-2 navButtons m-2" id="active" data-bs-toggle="modal" data-bs-target="#modalActive">Active bookings</div>
                         </li>
+                        <li class="nav-item">
+                            <div type="button" class="p-3 rounded-2 navButtons m-2" id="active" data-bs-toggle="modal" data-bs-target="#modalInfo">Booking information</div>
+                        </li>
                     </ul>
                 </div>
             </div>
@@ -117,7 +120,30 @@
             </div>
         </div>
 
-       <!--#endgregion-->
+       <!--#endgregion-->¨
+
+       <!--#region modal för att visa information om bokningar--> 
+
+       <div class="modal" id="modalInfo" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-heade modalHeaderColor">
+                    <h5 class="modal-title text-white m-3">Booking information</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="active">
+                        <p>You can only book times up to thirty days in advance</p>
+                    </div>
+                    
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn closeButton" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <!--#endgregion-->
 
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
         <script src="../Js/script.js"></script>

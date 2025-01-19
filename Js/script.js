@@ -1,36 +1,12 @@
 "use strict";
 
-//#region attribut för court 1
+//#region attribut för banor och dagar
 
 let court1Days = [];
-
-//#endregion
-
-//#region attribut för court 2
-
 let court2Days = [];
-
-//#endregion
-
-//#region attribut för court 3 
-
 let court3Days = [];
-
-//#endregion
-
-//#region attribut för court 4
-
 let court4Days = [];
-
-//#endregion
-
-//#region attribut för court 5
-
 let court5Days = [];
-
-//#endregion
-
-//#region Klass för objekt för dagar
 
 class day{
 
@@ -117,85 +93,12 @@ window.addEventListener("load", () => {
 
     let days = new Date();
 
-    //Dagar och tider bana 1
-    for(let i = 0; i < 30; i++){
-        //Vektor med alla tider för en dag
-        let time = ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"];
-
-        //Hämtar nästa dag
-        const newDate = new Date(days);
-        newDate.setDate(days.getDate() + i);
-
-        //Skapar objekt för dagen
-        let dag1 = new day(newDate.getDate(), time);
-    
-        //Lägger till dagen för bana 1
-        court1Days.push(dag1);
-    }
-
-    //Dagar och tider bana 2
-    for(let i = 0; i < 30; i++){
-        //Vektor med alla tider för en dag
-        let time = ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"];
-
-        //Hämtar nästa dag
-        const newDate = new Date(days);
-        newDate.setDate(days.getDate() + i);
-
-        //Skapar objekt för dagen
-        let dag2 = new day(newDate.getDate(), time);
-    
-        //Lägger till dagen för bana 2
-        court2Days.push(dag2);
-    }
-
-    //Dagar och tider bana 3
-    for(let i = 0; i < 30; i++){
-        //Vektor med alla tider för en dag
-        let time = ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"];
-
-        //Hämtar nästa dag
-        const newDate = new Date(days);
-        newDate.setDate(days.getDate() + i);
-
-        //Skapar objekt för dagen
-        let dag3 = new day(newDate.getDate(), time);
-    
-        //Lägger till dagen för bana 3
-        court3Days.push(dag3);
-    }
-
-    //Dagar och tider bana 4
-    for(let i = 0; i < 30; i++){
-        //Vektor med alla tider för en dag
-        let time = ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"];
-
-        //Hämtar nästa dag
-        const newDate = new Date(days);
-        newDate.setDate(days.getDate() + i);
-
-        //Skapar objekt för dagen
-        let dag4 = new day(newDate.getDate(), time);
-    
-        //Lägger till dagen för bana 4
-        court4Days.push(dag4);
-    }
-
-    //Dagar och tider bana 5
-    for(let i = 0; i < 30; i++){
-        //Vektor med alla tider för en dag
-        let time = ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"];
-
-        //Hämtar nästa dag
-        const newDate = new Date(days);
-        newDate.setDate(days.getDate() + i);
-
-        //Skapar objekt för dagen
-        let dag5 = new day(newDate.getDate(), time);
-    
-        //Lägger till dagen för bana 5
-        court5Days.push(dag5);
-    }
+    //Lägger till dagar med tider för varje bana 
+    setTimeForDays(court1Days, days);
+    setTimeForDays(court2Days, days);
+    setTimeForDays(court3Days, days);
+    setTimeForDays(court4Days, days);
+    setTimeForDays(court5Days, days);
 
     for(let i = 0; i < court1Days[0].time.length; i++){
         let saveHour = court1Days[0].time[i].split(":");
@@ -210,7 +113,6 @@ window.addEventListener("load", () => {
             court5Days[0].time[i] = undefined;
         }
     }
-
 
     let searchRef = document.querySelector("#search");
 
@@ -734,11 +636,23 @@ function controleTime(button, dateRef, selectRef, inputRef, modalHeaderRef, labe
 
             //Kollar om användaren valt bana genom att klicka på en bana eller att välja i select/ option 
             if(modalHeaderRef == "Select court"){
-                confirmBooking("", bookings[bookings.length].bkID + 1, "Court " + oGlobalObjectCourt.clickedCourt, dateRef.value,  selectRef.value, inputRef.value);
+                if(bookings.length == 0){
+                    confirmBooking("", bookings.length  + 1, "Court " + oGlobalObjectCourt.clickedCourt, dateRef.value,  selectRef.value, inputRef.value);
+
+                }
+                else {
+                    confirmBooking("", bookings[bookings.length].bkID + 1, "Court " + oGlobalObjectCourt.clickedCourt, dateRef.value,  selectRef.value, inputRef.value);
+                }
             }
             else if(modalHeaderRef != "Booking"){
-                confirmBooking("", bookings[bookings.length].bkID + 1, modalHeaderRef.innerHTML, dateRef.value,  selectRef.value, inputRef.value);
 
+                if(bookings.length == 0){
+                    confirmBooking("", bookings.length  + 1,  modalHeaderRef.innerHTML, dateRef.value,  selectRef.value, inputRef.value);
+
+                }
+                else {
+                    confirmBooking("", bookings[bookings.length].bkID + 1, modalHeaderRef.innerHTML, dateRef.value,  selectRef.value, inputRef.value);
+                }
             }
 
             button.setAttribute("data-bs-dismiss", "modal");
@@ -873,6 +787,27 @@ function time(courtNumber, selectRef, splitDate){
 
 //#endregion
 
+//#region funktion som sätter tider per dag för banorna´
+
+function setTimeForDays(court, days){
+    for(let i = 0; i < 30; i++){
+        //Vektor med alla tider för en dag
+        let time = ["07:00", "08:00", "09:00", "10:00", "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00", "20:00", "21:00", "22:00"];
+
+        //Hämtar nästa dag
+        const newDate = new Date(days);
+        newDate.setDate(days.getDate() + i);
+
+        //Skapar objekt för dagen
+        let dag = new day(newDate.getDate(), time);
+    
+        //Lägger till dagen för bana 5
+        court.push(dag);
+    }
+}
+
+//#endregion
+
 //#region funktion som returnerar data
 
 //Funktion för att hämta och returnera datan för varje bokning
@@ -980,6 +915,5 @@ function removeBooking(data){
     .then(data => console.log("Booking successfully removed"))
     .catch(error => console.log("Error:", error));
 }
-
 
 //#endregion
