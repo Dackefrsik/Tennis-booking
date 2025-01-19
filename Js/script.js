@@ -169,7 +169,7 @@ window.addEventListener("load", () => {
                 // Gör något med varje bokning, exempelvis anropa confirmBooking
                 console.log("datum", booking.Date);
                 console.log("ID", booking.ID);
-                confirmBooking("Load", booking.ID, booking.Court, booking.Date, booking.Time, booking.Name);
+                confirmBooking("Load", booking.bkNumber, booking.Court, booking.Date.split("T")[0], booking.Time, booking.Name);
                 console.log("Antal bokningar: ", bookings.length);
 
             });
@@ -634,6 +634,8 @@ function controleTime(button, dateRef, selectRef, inputRef, modalHeaderRef, labe
             //Sätter kontrollen till False så det inte skapas två objekt
             bookingProgress = false;
 
+            console.log("bokning: ", bookings.bkNumber);
+
             //Kollar om användaren valt bana genom att klicka på en bana eller att välja i select/ option 
             if(modalHeaderRef == "Select court"){
                 if(bookings.length == 0){
@@ -641,7 +643,7 @@ function controleTime(button, dateRef, selectRef, inputRef, modalHeaderRef, labe
 
                 }
                 else {
-                    confirmBooking("", bookings[bookings.length].bkID + 1, "Court " + oGlobalObjectCourt.clickedCourt, dateRef.value,  selectRef.value, inputRef.value);
+                    confirmBooking("", bookings[bookings.length - 1].bkNumber + 1, "Court " + oGlobalObjectCourt.clickedCourt, dateRef.value,  selectRef.value, inputRef.value);
                 }
             }
             else if(modalHeaderRef != "Booking"){
@@ -651,7 +653,7 @@ function controleTime(button, dateRef, selectRef, inputRef, modalHeaderRef, labe
 
                 }
                 else {
-                    confirmBooking("", bookings[bookings.length].bkID + 1, modalHeaderRef.innerHTML, dateRef.value,  selectRef.value, inputRef.value);
+                    confirmBooking("", bookings[bookings.length - 1].bkNumber + 1, modalHeaderRef.innerHTML, dateRef.value,  selectRef.value, inputRef.value);
                 }
             }
 
@@ -767,16 +769,12 @@ function time(courtNumber, selectRef, splitDate){
             if(splitDate[2] == court5Days[i].date){
 
                 for(let j = 0; j < court5Days[i].time.length; j ++){
-                    //Splittar tiderna som finns i vektorn på :
-                    let splitTimer = court1Days[i].time[j].split(":");
-                    let timeHoure = parseInt(splitTimer[0]);
-                    let timeMin = parseInt(splitTimer[1]);
 
                     //Kollar om tiden ska gå att boka
                     if(court5Days[i].time[j] != undefined ){
                         let optionRef = document.createElement("option");
                         optionRef.setAttribute("value", court5Days[i].time[j]);
-                        optionRef.innerHTML = court1Days[i].time[j];
+                        optionRef.innerHTML = court5Days[i].time[j];
                         selectRef.appendChild(optionRef);
                     } 
                 }

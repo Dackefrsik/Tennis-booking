@@ -128,7 +128,7 @@ app.post("/removeBooking", (req, res) => {
     let queryPromese = [];
 
     //Sql fråga för att ta bort en bokning
-    const query = "DELETE FROM bookings WHERE ID = ?";
+    const query = "DELETE FROM bookings WHERE bkNumber = ?";
     const value = [bkID];
 
     //Puschar datan till queryPromese
